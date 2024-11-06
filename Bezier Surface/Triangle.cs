@@ -18,9 +18,9 @@ namespace Bezier_Surface
 		}
 		public void Draw(Graphics g)
 		{
-			g.DrawEllipse(new Pen(Color.DarkBlue, 3), vertices[0].pointAfterRotation.X, vertices[0].pointAfterRotation.Y, 3, 3);
-			g.DrawEllipse(new Pen(Color.DarkBlue, 3), vertices[1].pointAfterRotation.X, vertices[1].pointAfterRotation.Y, 3, 3);
-			g.DrawEllipse(new Pen(Color.DarkBlue, 3), vertices[2].pointAfterRotation.X, vertices[2].pointAfterRotation.Y, 3, 3);
+			g.DrawEllipse(new Pen(Color.DarkBlue, 3), vertices[0].pointAfterRotation.X-1.5f, vertices[0].pointAfterRotation.Y - 1.5f, 3, 3);
+			g.DrawEllipse(new Pen(Color.DarkBlue, 3), vertices[1].pointAfterRotation.X - 1.5f, vertices[1].pointAfterRotation.Y - 1.5f, 3, 3);
+			g.DrawEllipse(new Pen(Color.DarkBlue, 3), vertices[2].pointAfterRotation.X - 1.5f, vertices[2].pointAfterRotation.Y - 1.5f, 3, 3);
 			DrawLineBetweenVertices(vertices[0], vertices[1], g);
 			DrawLineBetweenVertices(vertices[0], vertices[2], g);
 			DrawLineBetweenVertices(vertices[1], vertices[2], g);

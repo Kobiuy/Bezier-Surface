@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Bezier_Surface
 {
-	//TODO Fast bitmap, rotatematrix
+	//TODO Fast bitmap, rotatematrix przesuwanie punktów kontrolnych
 	internal class Blueprint
 	{
 		public readonly static string FileName = "BezierSurface.txt";
@@ -60,7 +60,7 @@ namespace Bezier_Surface
 				SetOriginInCenter(g);
 				foreach (var vertex in CPs)
 				{
-					g.DrawEllipse(new Pen(Color.RebeccaPurple, 10), vertex.X, vertex.Y, 10, 10);
+					g.DrawEllipse(new Pen(Color.RebeccaPurple, 10), vertex.X-5, vertex.Y-5, 10, 10);
 				}
 				foreach (Triangle triangle in triangularMesh)
 				{
