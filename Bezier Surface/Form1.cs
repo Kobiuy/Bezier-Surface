@@ -1,3 +1,5 @@
+using System.Drawing;
+
 namespace Bezier_Surface
 {
 	public partial class Form1 : Form
@@ -37,5 +39,12 @@ namespace Bezier_Surface
 			blueprint.Draw();
 		}
 
+		private void Form1_Resize(object sender, EventArgs e)
+		{
+			blueprint.bitmap = new Bitmap(Canvas.Width, Canvas.Height);
+			Canvas.Image = blueprint.bitmap;
+			blueprint.Draw();
+
+		}
 	}
 }

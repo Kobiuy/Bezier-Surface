@@ -54,7 +54,7 @@
 			// 
 			// Canvas
 			// 
-			Canvas.Dock = DockStyle.Fill;
+			Canvas.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
 			Canvas.Location = new Point(0, 0);
 			Canvas.Name = "Canvas";
 			Canvas.Size = new Size(1047, 753);
@@ -199,6 +199,7 @@
 			Controls.Add(splitContainer1);
 			Name = "Form1";
 			Text = "Form1";
+			Resize += Form1_Resize;
 			((System.ComponentModel.ISupportInitialize)Canvas).EndInit();
 			splitContainer1.Panel1.ResumeLayout(false);
 			splitContainer1.Panel2.ResumeLayout(false);

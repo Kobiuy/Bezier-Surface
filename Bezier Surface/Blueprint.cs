@@ -8,11 +8,11 @@ using System.Threading.Tasks;
 
 namespace Bezier_Surface
 {
-
+	//TODO Fast bitmap, rotatematrix
 	internal class Blueprint
 	{
 		public readonly static string FileName = "BezierSurface.txt";
-		public Bitmap bitmap { get; }
+		public Bitmap bitmap { get; set; }
 		public PictureBox Canvas { get; set; }
 		public Vector3[] CPs = new Vector3[16];
 		public List<Triangle> triangularMesh = new List<Triangle>();
@@ -51,6 +51,7 @@ namespace Bezier_Surface
 		}
 		public void Draw()
 		{
+
 			CreateTriangularMesh();
 			Rotate();
 			using (var g = Graphics.FromImage(bitmap))
