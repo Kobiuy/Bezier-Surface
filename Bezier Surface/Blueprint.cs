@@ -1,24 +1,28 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Numerics;
 
 namespace Bezier_Surface
 {
-	//TODO Fast bitmap, rotatematrix przesuwanie punktów kontrolnych
+	//rotatematrix 
 	internal class Blueprint
 	{
 		public readonly static string FileName = "BezierSurface.txt";
+		public Color lightColor = Color.White;
+		public bool showControlPoints = true;
+		public bool showMesh = true;
+		public Vector3 L = new Vector3(0, 0, 200);
 		public Bitmap bitmap { get; set; }
 		public PictureBox Canvas { get; set; }
-		public Vector3[] CPs = new Vector3[16];
+		public bool animatioPause { get; set; }
+		public int m { get; set; } = 10;
+		public float ks { get; set; } = 0.2f;
+		public float kd { get; set; } = 0.8f;
+
+		public Vertex[] CPs = new Vertex[16];
 		public List<Triangle> triangularMesh = new List<Triangle>();
 		public int alfa = 0; // z
 		public int beta = 0; // x
 		public int precision = 10;
+		public Color survaceColor = Color.DeepPink;
 		public Blueprint(int width, int height, PictureBox Canvas)
 		{
 			bitmap = new Bitmap(width, height);
@@ -41,30 +45,39 @@ namespace Bezier_Surface
 				while (!streamReader.EndOfStream && i != 16)
 				{
 					string[] line = streamReader.ReadLine().Split();
-					CPs[i++] = (new Vector3(float.Parse(line[0]), float.Parse(line[1]), float.Parse(line[2])));
+					CPs[i++] = (new Vertex(float.Parse(line[0]), float.Parse(line[1]), float.Parse(line[2]), 0, 0));
 				}
 			}
 		}
 		public void SortPoints()
 		{
-			CPs = CPs.OrderBy(p => p.X).ThenBy(p => p.Y).ToArray();
+			CPs = CPs.OrderBy(p => p.pointBR.X).ThenBy(p => p.pointBR.Y).ToArray();
 		}
 		public void Draw()
 		{
-
 			CreateTriangularMesh();
 			Rotate();
 			using (var g = Graphics.FromImage(bitmap))
 			{
 				g.Clear(Color.White);
 				SetOriginInCenter(g);
-				foreach (var vertex in CPs)
+				if (showControlPoints)
 				{
-					g.DrawEllipse(new Pen(Color.RebeccaPurple, 10), vertex.X-5, vertex.Y-5, 10, 10);
+					foreach (var vertex in CPs)
+					{
+						g.DrawEllipse(new Pen(Color.RebeccaPurple, 10), vertex.pointAR.X - 5, vertex.pointAR.Y - 5, 10, 10);
+					}
 				}
 				foreach (Triangle triangle in triangularMesh)
 				{
-					triangle.Draw(g);
+					triangle.FillTriangle(this);
+				}
+				if (showMesh)
+				{
+					foreach (var triangle in triangularMesh)
+					{
+						triangle.Draw(g);
+					}
 				}
 				Canvas.Refresh();
 			}
@@ -83,14 +96,26 @@ namespace Bezier_Surface
 				{
 					v = step * c;
 					Vector3 vector = new Vector3();
+					Vector3 pu = new Vector3();
+					Vector3 pv = new Vector3();
+
 					for (int i = 0; i < 4; i++) // n
 					{
 						for (int j = 0; j < 4; j++) // m
 						{
-							vector += CPs[4 * i + j] * MathHelper.CalcB(i, 3, u) * MathHelper.CalcB(j, 3, v);
+							vector += CPs[4 * i + j].pointBR * MathHelper.CalcB(i, 3, u) * MathHelper.CalcB(j, 3, v);
+
 						}
 					}
-					vertices[r, c] = new Vertex(vector);
+					for (int i = 0; i < 4; i++)
+					{
+						for (int j = 0; j < 3; j++)
+						{
+							pu += 3 * (CPs[(j + 1) * 4 + i].pointBR - CPs[j * 4 + i].pointBR) * MathHelper.CalcB(j, 2, u) * MathHelper.CalcB(i, 3, v);
+							pv += 3 * (CPs[i * 4 + j + 1].pointBR - CPs[i * 4 + j].pointBR) * MathHelper.CalcB(i, 3, u) * MathHelper.CalcB(j, 2, v);
+						}
+					}
+					vertices[r, c] = new Vertex(new Vector3((int)vector.X, (int)vector.Y, (int)vector.Z), u, v, pu, pv);
 				}
 			}
 			return vertices;
@@ -115,7 +140,10 @@ namespace Bezier_Surface
 			{
 				triangle.Rotate(alfa, beta);
 			}
+			foreach (var cp in CPs)
+			{
+				cp.Rotate(alfa, beta);
+			}
 		}
-
 	}
 }

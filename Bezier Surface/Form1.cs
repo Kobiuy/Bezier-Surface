@@ -1,5 +1,3 @@
-using System.Drawing;
-
 namespace Bezier_Surface
 {
 	public partial class Form1 : Form
@@ -13,22 +11,23 @@ namespace Bezier_Surface
 			Canvas.Image = blueprint.bitmap;
 		}
 
-		private void checkBox1_CheckedChanged(object sender, EventArgs e)
+		private void controlPointsCheckbox_CheckedChanged(object sender, EventArgs e)
 		{
-
+			blueprint.showControlPoints = controlPointsCheckbox.Checked;
+			blueprint.Draw();
 		}
 
 		private void alfaSlider_Scroll(object sender, EventArgs e)
 		{
 			blueprint.alfa = alfaSlider.Value;
-			alfaLabel.Text = "Value: " + alfaSlider.Value.ToString() + "       ";
+			alfaLabel.Text = "Value: " + alfaSlider.Value.ToString();
 			blueprint.Draw();
 		}
 
 		private void betaSlider_Scroll(object sender, EventArgs e)
 		{
 			blueprint.beta = betaSlider.Value;
-			betaLabel.Text = "Value: " + betaSlider.Value.ToString() + "       ";
+			betaLabel.Text = "Value: " + betaSlider.Value.ToString();
 			blueprint.Draw();
 		}
 
@@ -45,6 +44,55 @@ namespace Bezier_Surface
 			Canvas.Image = blueprint.bitmap;
 			blueprint.Draw();
 
+		}
+
+		private void lightColorButton_Click(object sender, EventArgs e)
+		{
+			var colorDialog = new ColorDialog();
+			if (colorDialog.ShowDialog() == DialogResult.OK)
+			{
+				blueprint.lightColor = colorDialog.Color;
+				lightColorButton.BackColor = colorDialog.Color;
+			}
+		}
+
+		private void kdTrackbar_Scroll(object sender, EventArgs e)
+		{
+			blueprint.kd = kdTrackbar.Value / 10f;
+			kdLabel.Text = "Value: " + blueprint.kd.ToString();
+			blueprint.Draw();
+		}
+
+		private void ksTrackbar_Scroll(object sender, EventArgs e)
+		{
+			blueprint.ks = ksTrackbar.Value / 10f;
+			ksLabel.Text = "Value: " + blueprint.ks.ToString();
+			blueprint.Draw();
+		}
+
+		private void mTrackbar_Scroll(object sender, EventArgs e)
+		{
+			blueprint.m = mTrackbar.Value;
+			mLabel.Text = "Value: " + mTrackbar.Value.ToString();
+			blueprint.Draw();
+		}
+
+		private void zLightTrackbar_Scroll(object sender, EventArgs e)
+		{
+			blueprint.L.Z = zLightTrackbar.Value;
+			zLightTrackbar.Text = "Value: " + zLightTrackbar.Value.ToString();
+			blueprint.Draw();
+		}
+
+		private void pauseButton_Click(object sender, EventArgs e)
+		{
+			blueprint.animatioPause = true;
+		}
+
+		private void checkBox1_CheckedChanged(object sender, EventArgs e)
+		{
+			blueprint.showMesh = meshCheckBox.Checked;
+			blueprint.Draw();
 		}
 	}
 }

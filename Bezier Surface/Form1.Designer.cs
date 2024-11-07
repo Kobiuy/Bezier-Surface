@@ -31,7 +31,7 @@
 			Canvas = new PictureBox();
 			splitContainer1 = new SplitContainer();
 			flowLayoutPanel1 = new FlowLayoutPanel();
-			checkBox1 = new CheckBox();
+			controlPointsCheckbox = new CheckBox();
 			label3 = new Label();
 			alfaSlider = new TrackBar();
 			alfaLabel = new Label();
@@ -41,6 +41,24 @@
 			label1 = new Label();
 			precisionTrackBar = new TrackBar();
 			precisionLabel = new Label();
+			lightColorButton = new Button();
+			groupBox1 = new GroupBox();
+			textureButton = new RadioButton();
+			solidColorButton = new RadioButton();
+			label4 = new Label();
+			kdTrackbar = new TrackBar();
+			kdLabel = new Label();
+			label6 = new Label();
+			ksTrackbar = new TrackBar();
+			ksLabel = new Label();
+			label8 = new Label();
+			mTrackbar = new TrackBar();
+			mLabel = new Label();
+			label10 = new Label();
+			zLightTrackbar = new TrackBar();
+			zLightLabel = new Label();
+			pauseButton = new Button();
+			meshCheckBox = new CheckBox();
 			((System.ComponentModel.ISupportInitialize)Canvas).BeginInit();
 			((System.ComponentModel.ISupportInitialize)splitContainer1).BeginInit();
 			splitContainer1.Panel1.SuspendLayout();
@@ -50,14 +68,19 @@
 			((System.ComponentModel.ISupportInitialize)alfaSlider).BeginInit();
 			((System.ComponentModel.ISupportInitialize)betaSlider).BeginInit();
 			((System.ComponentModel.ISupportInitialize)precisionTrackBar).BeginInit();
+			groupBox1.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)kdTrackbar).BeginInit();
+			((System.ComponentModel.ISupportInitialize)ksTrackbar).BeginInit();
+			((System.ComponentModel.ISupportInitialize)mTrackbar).BeginInit();
+			((System.ComponentModel.ISupportInitialize)zLightTrackbar).BeginInit();
 			SuspendLayout();
 			// 
 			// Canvas
 			// 
 			Canvas.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-			Canvas.Location = new Point(0, 0);
+			Canvas.Location = new Point(15, 0);
 			Canvas.Name = "Canvas";
-			Canvas.Size = new Size(1047, 753);
+			Canvas.Size = new Size(1008, 953);
 			Canvas.TabIndex = 0;
 			Canvas.TabStop = false;
 			// 
@@ -74,13 +97,14 @@
 			// splitContainer1.Panel2
 			// 
 			splitContainer1.Panel2.Controls.Add(Canvas);
-			splitContainer1.Size = new Size(1182, 753);
-			splitContainer1.SplitterDistance = 131;
+			splitContainer1.Size = new Size(1182, 953);
+			splitContainer1.SplitterDistance = 170;
 			splitContainer1.TabIndex = 1;
 			// 
 			// flowLayoutPanel1
 			// 
-			flowLayoutPanel1.Controls.Add(checkBox1);
+			flowLayoutPanel1.Controls.Add(controlPointsCheckbox);
+			flowLayoutPanel1.Controls.Add(meshCheckBox);
 			flowLayoutPanel1.Controls.Add(label3);
 			flowLayoutPanel1.Controls.Add(alfaSlider);
 			flowLayoutPanel1.Controls.Add(alfaLabel);
@@ -90,27 +114,45 @@
 			flowLayoutPanel1.Controls.Add(label1);
 			flowLayoutPanel1.Controls.Add(precisionTrackBar);
 			flowLayoutPanel1.Controls.Add(precisionLabel);
+			flowLayoutPanel1.Controls.Add(lightColorButton);
+			flowLayoutPanel1.Controls.Add(groupBox1);
+			flowLayoutPanel1.Controls.Add(label4);
+			flowLayoutPanel1.Controls.Add(kdTrackbar);
+			flowLayoutPanel1.Controls.Add(kdLabel);
+			flowLayoutPanel1.Controls.Add(label6);
+			flowLayoutPanel1.Controls.Add(ksTrackbar);
+			flowLayoutPanel1.Controls.Add(ksLabel);
+			flowLayoutPanel1.Controls.Add(label8);
+			flowLayoutPanel1.Controls.Add(mTrackbar);
+			flowLayoutPanel1.Controls.Add(mLabel);
+			flowLayoutPanel1.Controls.Add(label10);
+			flowLayoutPanel1.Controls.Add(zLightTrackbar);
+			flowLayoutPanel1.Controls.Add(zLightLabel);
+			flowLayoutPanel1.Controls.Add(pauseButton);
 			flowLayoutPanel1.Dock = DockStyle.Fill;
+			flowLayoutPanel1.FlowDirection = FlowDirection.TopDown;
 			flowLayoutPanel1.Location = new Point(0, 0);
 			flowLayoutPanel1.Name = "flowLayoutPanel1";
-			flowLayoutPanel1.Size = new Size(131, 753);
+			flowLayoutPanel1.Size = new Size(170, 953);
 			flowLayoutPanel1.TabIndex = 0;
 			// 
-			// checkBox1
+			// controlPointsCheckbox
 			// 
-			checkBox1.AutoSize = true;
-			checkBox1.Location = new Point(3, 3);
-			checkBox1.Name = "checkBox1";
-			checkBox1.Size = new Size(89, 24);
-			checkBox1.TabIndex = 1;
-			checkBox1.Text = "GridOnly";
-			checkBox1.UseVisualStyleBackColor = true;
-			checkBox1.CheckedChanged += checkBox1_CheckedChanged;
+			controlPointsCheckbox.AutoSize = true;
+			controlPointsCheckbox.Checked = true;
+			controlPointsCheckbox.CheckState = CheckState.Checked;
+			controlPointsCheckbox.Location = new Point(3, 3);
+			controlPointsCheckbox.Name = "controlPointsCheckbox";
+			controlPointsCheckbox.Size = new Size(163, 24);
+			controlPointsCheckbox.TabIndex = 1;
+			controlPointsCheckbox.Text = "Show Control Points";
+			controlPointsCheckbox.UseVisualStyleBackColor = true;
+			controlPointsCheckbox.CheckedChanged += controlPointsCheckbox_CheckedChanged;
 			// 
 			// label3
 			// 
 			label3.AutoSize = true;
-			label3.Location = new Point(3, 30);
+			label3.Location = new Point(3, 60);
 			label3.Name = "label3";
 			label3.Size = new Size(39, 20);
 			label3.TabIndex = 8;
@@ -118,7 +160,7 @@
 			// 
 			// alfaSlider
 			// 
-			alfaSlider.Location = new Point(3, 53);
+			alfaSlider.Location = new Point(3, 83);
 			alfaSlider.Maximum = 45;
 			alfaSlider.Minimum = -45;
 			alfaSlider.Name = "alfaSlider";
@@ -129,16 +171,16 @@
 			// alfaLabel
 			// 
 			alfaLabel.AutoSize = true;
-			alfaLabel.Location = new Point(3, 112);
+			alfaLabel.Location = new Point(3, 142);
 			alfaLabel.Name = "alfaLabel";
-			alfaLabel.Size = new Size(92, 20);
+			alfaLabel.Size = new Size(60, 20);
 			alfaLabel.TabIndex = 9;
-			alfaLabel.Text = "Value: 0        ";
+			alfaLabel.Text = "Value: 0";
 			// 
 			// label2
 			// 
 			label2.AutoSize = true;
-			label2.Location = new Point(3, 132);
+			label2.Location = new Point(3, 162);
 			label2.Name = "label2";
 			label2.Size = new Size(42, 20);
 			label2.TabIndex = 7;
@@ -146,7 +188,7 @@
 			// 
 			// betaSlider
 			// 
-			betaSlider.Location = new Point(3, 155);
+			betaSlider.Location = new Point(3, 185);
 			betaSlider.Maximum = 90;
 			betaSlider.Name = "betaSlider";
 			betaSlider.Size = new Size(130, 56);
@@ -156,7 +198,7 @@
 			// betaLabel
 			// 
 			betaLabel.AutoSize = true;
-			betaLabel.Location = new Point(3, 214);
+			betaLabel.Location = new Point(3, 244);
 			betaLabel.Name = "betaLabel";
 			betaLabel.Size = new Size(60, 20);
 			betaLabel.TabIndex = 10;
@@ -165,7 +207,7 @@
 			// label1
 			// 
 			label1.AutoSize = true;
-			label1.Location = new Point(3, 234);
+			label1.Location = new Point(3, 264);
 			label1.Name = "label1";
 			label1.Size = new Size(71, 20);
 			label1.TabIndex = 6;
@@ -173,7 +215,7 @@
 			// 
 			// precisionTrackBar
 			// 
-			precisionTrackBar.Location = new Point(3, 257);
+			precisionTrackBar.Location = new Point(3, 287);
 			precisionTrackBar.Maximum = 100;
 			precisionTrackBar.Minimum = 1;
 			precisionTrackBar.Name = "precisionTrackBar";
@@ -185,17 +227,199 @@
 			// precisionLabel
 			// 
 			precisionLabel.AutoSize = true;
-			precisionLabel.Location = new Point(3, 316);
+			precisionLabel.Location = new Point(3, 346);
 			precisionLabel.Name = "precisionLabel";
 			precisionLabel.Size = new Size(68, 20);
 			precisionLabel.TabIndex = 11;
 			precisionLabel.Text = "Value: 10";
 			// 
+			// lightColorButton
+			// 
+			lightColorButton.Location = new Point(3, 369);
+			lightColorButton.Name = "lightColorButton";
+			lightColorButton.Size = new Size(94, 29);
+			lightColorButton.TabIndex = 12;
+			lightColorButton.Text = "Set Light Color";
+			lightColorButton.UseVisualStyleBackColor = true;
+			lightColorButton.Click += lightColorButton_Click;
+			// 
+			// groupBox1
+			// 
+			groupBox1.AutoSize = true;
+			groupBox1.Controls.Add(textureButton);
+			groupBox1.Controls.Add(solidColorButton);
+			groupBox1.Location = new Point(3, 404);
+			groupBox1.Name = "groupBox1";
+			groupBox1.Size = new Size(116, 106);
+			groupBox1.TabIndex = 17;
+			groupBox1.TabStop = false;
+			groupBox1.Text = "Surface Type";
+			// 
+			// textureButton
+			// 
+			textureButton.AutoSize = true;
+			textureButton.Location = new Point(6, 56);
+			textureButton.Name = "textureButton";
+			textureButton.Size = new Size(84, 24);
+			textureButton.TabIndex = 13;
+			textureButton.Text = "Teksture";
+			textureButton.UseVisualStyleBackColor = true;
+			// 
+			// solidColorButton
+			// 
+			solidColorButton.AutoSize = true;
+			solidColorButton.Checked = true;
+			solidColorButton.Location = new Point(6, 26);
+			solidColorButton.Name = "solidColorButton";
+			solidColorButton.Size = new Size(104, 24);
+			solidColorButton.TabIndex = 14;
+			solidColorButton.TabStop = true;
+			solidColorButton.Text = "Solid Color";
+			solidColorButton.UseVisualStyleBackColor = true;
+			// 
+			// label4
+			// 
+			label4.AutoSize = true;
+			label4.Location = new Point(3, 513);
+			label4.Name = "label4";
+			label4.Size = new Size(30, 20);
+			label4.TabIndex = 19;
+			label4.Text = "Kd:";
+			// 
+			// kdTrackbar
+			// 
+			kdTrackbar.Location = new Point(3, 536);
+			kdTrackbar.Maximum = 9;
+			kdTrackbar.Minimum = 1;
+			kdTrackbar.Name = "kdTrackbar";
+			kdTrackbar.Size = new Size(130, 56);
+			kdTrackbar.TabIndex = 18;
+			kdTrackbar.Value = 8;
+			kdTrackbar.Scroll += kdTrackbar_Scroll;
+			// 
+			// kdLabel
+			// 
+			kdLabel.AutoSize = true;
+			kdLabel.Location = new Point(3, 595);
+			kdLabel.Name = "kdLabel";
+			kdLabel.Size = new Size(71, 20);
+			kdLabel.TabIndex = 20;
+			kdLabel.Text = "Value: 0.8";
+			// 
+			// label6
+			// 
+			label6.AutoSize = true;
+			label6.Location = new Point(3, 615);
+			label6.Name = "label6";
+			label6.Size = new Size(27, 20);
+			label6.TabIndex = 22;
+			label6.Text = "Ks:";
+			// 
+			// ksTrackbar
+			// 
+			ksTrackbar.Location = new Point(3, 638);
+			ksTrackbar.Name = "ksTrackbar";
+			ksTrackbar.Size = new Size(130, 56);
+			ksTrackbar.TabIndex = 21;
+			ksTrackbar.Value = 2;
+			ksTrackbar.Scroll += ksTrackbar_Scroll;
+			// 
+			// ksLabel
+			// 
+			ksLabel.AutoSize = true;
+			ksLabel.Location = new Point(3, 697);
+			ksLabel.Name = "ksLabel";
+			ksLabel.Size = new Size(71, 20);
+			ksLabel.TabIndex = 23;
+			ksLabel.Text = "Value: 0.2";
+			// 
+			// label8
+			// 
+			label8.AutoSize = true;
+			label8.Location = new Point(3, 717);
+			label8.Name = "label8";
+			label8.Size = new Size(25, 20);
+			label8.TabIndex = 25;
+			label8.Text = "M:";
+			// 
+			// mTrackbar
+			// 
+			mTrackbar.Location = new Point(3, 740);
+			mTrackbar.Maximum = 100;
+			mTrackbar.Minimum = 1;
+			mTrackbar.Name = "mTrackbar";
+			mTrackbar.Size = new Size(130, 56);
+			mTrackbar.TabIndex = 24;
+			mTrackbar.Value = 10;
+			mTrackbar.Scroll += mTrackbar_Scroll;
+			// 
+			// mLabel
+			// 
+			mLabel.AutoSize = true;
+			mLabel.Location = new Point(3, 799);
+			mLabel.Name = "mLabel";
+			mLabel.Size = new Size(68, 20);
+			mLabel.TabIndex = 26;
+			mLabel.Text = "Value: 10";
+			// 
+			// label10
+			// 
+			label10.AutoSize = true;
+			label10.Location = new Point(3, 819);
+			label10.Name = "label10";
+			label10.Size = new Size(58, 20);
+			label10.TabIndex = 28;
+			label10.Text = "Light Z:";
+			// 
+			// zLightTrackbar
+			// 
+			zLightTrackbar.Location = new Point(3, 842);
+			zLightTrackbar.Maximum = 300;
+			zLightTrackbar.Minimum = 1;
+			zLightTrackbar.Name = "zLightTrackbar";
+			zLightTrackbar.Size = new Size(130, 56);
+			zLightTrackbar.TabIndex = 27;
+			zLightTrackbar.Value = 200;
+			zLightTrackbar.Scroll += zLightTrackbar_Scroll;
+			// 
+			// zLightLabel
+			// 
+			zLightLabel.AutoSize = true;
+			zLightLabel.Location = new Point(3, 901);
+			zLightLabel.Name = "zLightLabel";
+			zLightLabel.Size = new Size(76, 20);
+			zLightLabel.TabIndex = 29;
+			zLightLabel.Text = "Value: 200";
+			// 
+			// pauseButton
+			// 
+			pauseButton.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+			pauseButton.Location = new Point(172, 3);
+			pauseButton.Name = "pauseButton";
+			pauseButton.Size = new Size(0, 29);
+			pauseButton.TabIndex = 30;
+			pauseButton.Text = "Pause Animation";
+			pauseButton.UseVisualStyleBackColor = true;
+			pauseButton.Click += pauseButton_Click;
+			// 
+			// meshCheckBox
+			// 
+			meshCheckBox.AutoSize = true;
+			meshCheckBox.Checked = true;
+			meshCheckBox.CheckState = CheckState.Checked;
+			meshCheckBox.Location = new Point(3, 33);
+			meshCheckBox.Name = "meshCheckBox";
+			meshCheckBox.Size = new Size(106, 24);
+			meshCheckBox.TabIndex = 31;
+			meshCheckBox.Text = "Show Mesh";
+			meshCheckBox.UseVisualStyleBackColor = true;
+			meshCheckBox.CheckedChanged += checkBox1_CheckedChanged;
+			// 
 			// Form1
 			// 
 			AutoScaleDimensions = new SizeF(8F, 20F);
 			AutoScaleMode = AutoScaleMode.Font;
-			ClientSize = new Size(1182, 753);
+			ClientSize = new Size(1182, 953);
 			Controls.Add(splitContainer1);
 			Name = "Form1";
 			Text = "Form1";
@@ -210,6 +434,12 @@
 			((System.ComponentModel.ISupportInitialize)alfaSlider).EndInit();
 			((System.ComponentModel.ISupportInitialize)betaSlider).EndInit();
 			((System.ComponentModel.ISupportInitialize)precisionTrackBar).EndInit();
+			groupBox1.ResumeLayout(false);
+			groupBox1.PerformLayout();
+			((System.ComponentModel.ISupportInitialize)kdTrackbar).EndInit();
+			((System.ComponentModel.ISupportInitialize)ksTrackbar).EndInit();
+			((System.ComponentModel.ISupportInitialize)mTrackbar).EndInit();
+			((System.ComponentModel.ISupportInitialize)zLightTrackbar).EndInit();
 			ResumeLayout(false);
 		}
 
@@ -218,7 +448,7 @@
 		private PictureBox Canvas;
 		private SplitContainer splitContainer1;
 		private FlowLayoutPanel flowLayoutPanel1;
-		private CheckBox checkBox1;
+		private CheckBox controlPointsCheckbox;
 		private TrackBar betaSlider;
 		private TrackBar alfaSlider;
 		private TrackBar precisionTrackBar;
@@ -228,5 +458,23 @@
 		private Label alfaLabel;
 		private Label betaLabel;
 		private Label precisionLabel;
+		private Button lightColorButton;
+		private RadioButton textureButton;
+		private RadioButton solidColorButton;
+		private GroupBox groupBox1;
+		private Label label4;
+		private TrackBar kdTrackbar;
+		private Label kdLabel;
+		private Label label6;
+		private TrackBar ksTrackbar;
+		private Label ksLabel;
+		private Label label8;
+		private TrackBar mTrackbar;
+		private Label mLabel;
+		private Label label10;
+		private TrackBar zLightTrackbar;
+		private Label zLightLabel;
+		private Button pauseButton;
+		private CheckBox meshCheckBox;
 	}
 }
