@@ -1,14 +1,17 @@
 namespace Bezier_Surface
 {
-	public partial class Form1 : Form
+	internal partial class Form1 : Form
 	{
 		Blueprint blueprint;
+		Animator animator;
 		public Form1()
 		{
 			InitializeComponent();
 			blueprint = new Blueprint(Canvas.Width, Canvas.Height, Canvas);
 			blueprint.Canvas = Canvas;
 			Canvas.Image = blueprint.bitmap;
+			animator = new Animator(blueprint, this);
+			animator.ChangeState();
 		}
 
 		private void controlPointsCheckbox_CheckedChanged(object sender, EventArgs e)
@@ -21,6 +24,7 @@ namespace Bezier_Surface
 		{
 			blueprint.alfa = alfaSlider.Value;
 			alfaLabel.Text = "Value: " + alfaSlider.Value.ToString();
+			blueprint.Rotate();
 			blueprint.Draw();
 		}
 
@@ -28,6 +32,7 @@ namespace Bezier_Surface
 		{
 			blueprint.beta = betaSlider.Value;
 			betaLabel.Text = "Value: " + betaSlider.Value.ToString();
+			blueprint.Rotate();
 			blueprint.Draw();
 		}
 
@@ -35,6 +40,8 @@ namespace Bezier_Surface
 		{
 			blueprint.precision = precisionTrackBar.Value;
 			precisionLabel.Text = "Value: " + precisionTrackBar.Value.ToString();
+			blueprint.CreateTriangularMesh();
+			blueprint.Rotate();
 			blueprint.Draw();
 		}
 
@@ -79,14 +86,16 @@ namespace Bezier_Surface
 
 		private void zLightTrackbar_Scroll(object sender, EventArgs e)
 		{
-			blueprint.L.Z = zLightTrackbar.Value;
-			zLightTrackbar.Text = "Value: " + zLightTrackbar.Value.ToString();
+			blueprint.lightPosition.Z = zLightTrackbar.Value;
+			zLightLabel.Text = "Value: " + zLightTrackbar.Value.ToString();
 			blueprint.Draw();
 		}
 
-		private void pauseButton_Click(object sender, EventArgs e)
+		private void animationButton_Click(object sender, EventArgs e)
 		{
-			blueprint.animatioPause = true;
+			animator.ChangeState();
+			animationButton.Text = animator.running ? "Pause Animation" : "Start Animation";
+
 		}
 
 		private void checkBox1_CheckedChanged(object sender, EventArgs e)

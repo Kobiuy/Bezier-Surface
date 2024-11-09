@@ -35,7 +35,7 @@ namespace Bezier_Surface
 		}
 
 
-		public void FillTriangle(Blueprint blueprint)
+		public void FillTriangle(Blueprint blueprint, FastBitmap fbtmp)
 		{
 			int minY = int.MaxValue;
 			int maxY = int.MinValue;
@@ -68,12 +68,9 @@ namespace Bezier_Surface
 
 			int y = minY;
 			Edge first = null;
-			using (var fbtmp = blueprint.bitmap.FastLock())
+			while (AET.Count != 0 || ET.Count != 0)
 			{
-				while (AET.Count != 0 || ET.Count != 0)
-				{
-					first = UpdateAET(AET, ET, y++, fbtmp, first, blueprint);
-				}
+				first = UpdateAET(AET, ET, y++, fbtmp, first, blueprint);
 			}
 		}
 
@@ -85,7 +82,7 @@ namespace Bezier_Surface
 				{
 					if (!AET.ContainsKey((int)e.yMax))
 						AET.Add((int)e.yMax, new List<Edge>());
-					AET[(int)e.yMax].Add(e);
+					AET[(int)e.yMax].Add(e); // TODO
 				}
 				ET.Remove(y);
 			}
@@ -143,11 +140,11 @@ namespace Bezier_Surface
 
 			(var normal, var z) = InterpolateNormalAndZ(vertices[0], vertices[1], vertices[2], point);
 
-			Vector3 L = Vector3.Normalize(bp.L);
+			Vector3 L = Vector3.Normalize(bp.lightPosition - new Vector3(point, z)); // TODO
 			var NL = Vector3.Dot(normal, L);
 			Vector3 R = 2 * NL * normal - L;
-
-			var colorResult = (bp.kd * ioil * Math.Clamp(NL, 0, 1) + bp.ks * ioil * (float)Math.Pow(Math.Clamp(Vector3.Dot(new Vector3(0, 0, 1), R), 0, 1), bp.m));
+			var V = new Vector3(0, 0, 1);
+			var colorResult = (bp.kd * ioil * Math.Clamp(NL, 0, 1) + bp.ks * ioil * (float)Math.Pow(Math.Clamp(Vector3.Dot(V, R), 0, 1), bp.m));
 
 			int r = (int)Math.Clamp(Math.Round(colorResult.X * 255), 0, 255);
 			int g = (int)Math.Clamp(Math.Round(colorResult.Y * 255), 0, 255);

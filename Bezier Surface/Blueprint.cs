@@ -1,18 +1,17 @@
-﻿using System.Numerics;
+﻿using FastBitmapLib;
+using System.Numerics;
 
 namespace Bezier_Surface
 {
-	//rotatematrix 
 	internal class Blueprint
 	{
-		public readonly static string FileName = "BezierSurface.txt";
+		public readonly static string FileName = "BezierDolek.txt";
 		public Color lightColor = Color.White;
 		public bool showControlPoints = true;
 		public bool showMesh = true;
-		public Vector3 L = new Vector3(0, 0, 200);
+		public Vector3 lightPosition = new Vector3(0, 0, 1000);
 		public Bitmap bitmap { get; set; }
 		public PictureBox Canvas { get; set; }
-		public bool animatioPause { get; set; }
 		public int m { get; set; } = 10;
 		public float ks { get; set; } = 0.2f;
 		public float kd { get; set; } = 0.8f;
@@ -29,6 +28,8 @@ namespace Bezier_Surface
 			this.Canvas = Canvas;
 
 			LoadPoints();
+			CreateTriangularMesh();
+			Rotate();
 			Draw();
 		}
 
@@ -36,6 +37,7 @@ namespace Bezier_Surface
 		{
 			g.ScaleTransform(1, -1);
 			g.TranslateTransform(Canvas.Width / 2, -Canvas.Height / 2);
+
 		}
 		public void LoadPoints()
 		{
@@ -55,8 +57,6 @@ namespace Bezier_Surface
 		}
 		public void Draw()
 		{
-			CreateTriangularMesh();
-			Rotate();
 			using (var g = Graphics.FromImage(bitmap))
 			{
 				g.Clear(Color.White);
@@ -68,9 +68,12 @@ namespace Bezier_Surface
 						g.DrawEllipse(new Pen(Color.RebeccaPurple, 10), vertex.pointAR.X - 5, vertex.pointAR.Y - 5, 10, 10);
 					}
 				}
-				foreach (Triangle triangle in triangularMesh)
+				using (var fbtmp = bitmap.FastLock())
 				{
-					triangle.FillTriangle(this);
+					foreach (Triangle triangle in triangularMesh)
+					{
+						triangle.FillTriangle(this, fbtmp);
+					}
 				}
 				if (showMesh)
 				{

@@ -32,6 +32,7 @@
 			splitContainer1 = new SplitContainer();
 			flowLayoutPanel1 = new FlowLayoutPanel();
 			controlPointsCheckbox = new CheckBox();
+			meshCheckBox = new CheckBox();
 			label3 = new Label();
 			alfaSlider = new TrackBar();
 			alfaLabel = new Label();
@@ -57,8 +58,7 @@
 			label10 = new Label();
 			zLightTrackbar = new TrackBar();
 			zLightLabel = new Label();
-			pauseButton = new Button();
-			meshCheckBox = new CheckBox();
+			animationButton = new Button();
 			((System.ComponentModel.ISupportInitialize)Canvas).BeginInit();
 			((System.ComponentModel.ISupportInitialize)splitContainer1).BeginInit();
 			splitContainer1.Panel1.SuspendLayout();
@@ -80,7 +80,7 @@
 			Canvas.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
 			Canvas.Location = new Point(15, 0);
 			Canvas.Name = "Canvas";
-			Canvas.Size = new Size(1008, 953);
+			Canvas.Size = new Size(1008, 1053);
 			Canvas.TabIndex = 0;
 			Canvas.TabStop = false;
 			// 
@@ -97,7 +97,7 @@
 			// splitContainer1.Panel2
 			// 
 			splitContainer1.Panel2.Controls.Add(Canvas);
-			splitContainer1.Size = new Size(1182, 953);
+			splitContainer1.Size = new Size(1182, 1053);
 			splitContainer1.SplitterDistance = 170;
 			splitContainer1.TabIndex = 1;
 			// 
@@ -128,12 +128,12 @@
 			flowLayoutPanel1.Controls.Add(label10);
 			flowLayoutPanel1.Controls.Add(zLightTrackbar);
 			flowLayoutPanel1.Controls.Add(zLightLabel);
-			flowLayoutPanel1.Controls.Add(pauseButton);
+			flowLayoutPanel1.Controls.Add(animationButton);
 			flowLayoutPanel1.Dock = DockStyle.Fill;
 			flowLayoutPanel1.FlowDirection = FlowDirection.TopDown;
 			flowLayoutPanel1.Location = new Point(0, 0);
 			flowLayoutPanel1.Name = "flowLayoutPanel1";
-			flowLayoutPanel1.Size = new Size(170, 953);
+			flowLayoutPanel1.Size = new Size(170, 1053);
 			flowLayoutPanel1.TabIndex = 0;
 			// 
 			// controlPointsCheckbox
@@ -148,6 +148,19 @@
 			controlPointsCheckbox.Text = "Show Control Points";
 			controlPointsCheckbox.UseVisualStyleBackColor = true;
 			controlPointsCheckbox.CheckedChanged += controlPointsCheckbox_CheckedChanged;
+			// 
+			// meshCheckBox
+			// 
+			meshCheckBox.AutoSize = true;
+			meshCheckBox.Checked = true;
+			meshCheckBox.CheckState = CheckState.Checked;
+			meshCheckBox.Location = new Point(3, 33);
+			meshCheckBox.Name = "meshCheckBox";
+			meshCheckBox.Size = new Size(106, 24);
+			meshCheckBox.TabIndex = 31;
+			meshCheckBox.Text = "Show Mesh";
+			meshCheckBox.UseVisualStyleBackColor = true;
+			meshCheckBox.CheckedChanged += checkBox1_CheckedChanged;
 			// 
 			// label3
 			// 
@@ -391,35 +404,22 @@
 			zLightLabel.TabIndex = 29;
 			zLightLabel.Text = "Value: 200";
 			// 
-			// pauseButton
+			// animationButton
 			// 
-			pauseButton.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-			pauseButton.Location = new Point(172, 3);
-			pauseButton.Name = "pauseButton";
-			pauseButton.Size = new Size(0, 29);
-			pauseButton.TabIndex = 30;
-			pauseButton.Text = "Pause Animation";
-			pauseButton.UseVisualStyleBackColor = true;
-			pauseButton.Click += pauseButton_Click;
-			// 
-			// meshCheckBox
-			// 
-			meshCheckBox.AutoSize = true;
-			meshCheckBox.Checked = true;
-			meshCheckBox.CheckState = CheckState.Checked;
-			meshCheckBox.Location = new Point(3, 33);
-			meshCheckBox.Name = "meshCheckBox";
-			meshCheckBox.Size = new Size(106, 24);
-			meshCheckBox.TabIndex = 31;
-			meshCheckBox.Text = "Show Mesh";
-			meshCheckBox.UseVisualStyleBackColor = true;
-			meshCheckBox.CheckedChanged += checkBox1_CheckedChanged;
+			animationButton.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+			animationButton.Location = new Point(3, 924);
+			animationButton.Name = "animationButton";
+			animationButton.Size = new Size(163, 29);
+			animationButton.TabIndex = 30;
+			animationButton.Text = "Start Animation";
+			animationButton.UseVisualStyleBackColor = true;
+			animationButton.Click += animationButton_Click;
 			// 
 			// Form1
 			// 
 			AutoScaleDimensions = new SizeF(8F, 20F);
 			AutoScaleMode = AutoScaleMode.Font;
-			ClientSize = new Size(1182, 953);
+			ClientSize = new Size(1182, 1053);
 			Controls.Add(splitContainer1);
 			Name = "Form1";
 			Text = "Form1";
@@ -474,7 +474,7 @@
 		private Label label10;
 		private TrackBar zLightTrackbar;
 		private Label zLightLabel;
-		private Button pauseButton;
 		private CheckBox meshCheckBox;
+		private Button animationButton;
 	}
 }

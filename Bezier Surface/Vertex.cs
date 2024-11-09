@@ -33,7 +33,7 @@ namespace Bezier_Surface
 		public void Rotate(int alfa, int beta)
 		{
 			RotateZ(alfa);
-			RotateX(beta);
+			RotateX(beta); // TODO Sortuj po z
 			normalAR = Vector3.Cross(puAR, pvAR);
 		}
 		private void RotateZ(int alfa)
@@ -46,7 +46,8 @@ namespace Bezier_Surface
 				pointAR = pointBR;
 				return;
 			}
-			var MZ = GetMZ(alfa);
+			//var MZ = GetMZ(alfa);
+			var MZ = Matrix4x4.CreateRotationZ((alfa * MathF.PI) / 180f);
 			var result = MZ * MatrixFromVector(puBR);
 			puAR = new Vector3(result.M11, result.M21, result.M31);
 			result = MZ * MatrixFromVector(pvBR);
@@ -60,7 +61,8 @@ namespace Bezier_Surface
 			{
 				return;
 			}
-			var MX = GetMX(beta);
+			//var MX = GetMX(beta);
+			var MX = Matrix4x4.CreateRotationX((beta * MathF.PI) / 180f);
 			var result = MX * MatrixFromVector(puAR);
 			puAR = new Vector3(result.M11, result.M21, result.M31);
 			result = MX * MatrixFromVector(pvAR);
@@ -68,26 +70,26 @@ namespace Bezier_Surface
 			result = MX * MatrixFromVector(pointAR);
 			pointAR = new Vector3((int)result.M11, (int)result.M21, (int)result.M31);
 		}
-		private static Matrix4x4 GetMZ(int alfa)
-		{
-			var angle = (alfa * MathF.PI) / 180f;
-			var cos = MathF.Cos(angle);
-			var sin = MathF.Sin(angle);
-			return new Matrix4x4(cos, -sin, 0, 0,
-								sin, cos, 0, 0,
-								0, 0, 1, 0,
-								0, 0, 0, 0);
-		}
-		private static Matrix4x4 GetMX(int beta)
-		{
-			var angle = (beta * MathF.PI) / 180f;
-			var cos = MathF.Cos(angle);
-			var sin = MathF.Sin(angle);
-			return new Matrix4x4(1, 0, 0, 0,
-								0, cos, -sin, 0,
-								0, sin, MathF.Cos(angle), 0,
-								0, 0, 0, 0);
-		}
+		//private static Matrix4x4 GetMZ(int alfa)
+		//{
+		//	var angle = (alfa * MathF.PI) / 180f;
+		//	var cos = MathF.Cos(angle);
+		//	var sin = MathF.Sin(angle);
+		//	return new Matrix4x4(cos, -sin, 0, 0,
+		//						sin, cos, 0, 0,
+		//						0, 0, 1, 0,
+		//						0, 0, 0, 1);
+		//}
+		//private static Matrix4x4 GetMX(int beta)
+		//{
+		//	var angle = (beta * MathF.PI) / 180f;
+		//	var cos = MathF.Cos(angle);
+		//	var sin = MathF.Sin(angle);
+		//	return new Matrix4x4(1, 0, 0, 0,
+		//						0, cos, -sin, 0,
+		//						0, sin, cos, 0,
+		//						0, 0, 0, 1);
+		//}
 		private static Matrix4x4 MatrixFromVector(Vector3 v)
 		{
 			return new Matrix4x4(v.X, 0, 0, 0, v.Y, 0, 0, 0, v.Z, 0, 0, 0, 0, 0, 0, 0);
