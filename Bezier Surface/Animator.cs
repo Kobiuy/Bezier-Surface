@@ -44,11 +44,11 @@ namespace Bezier_Surface
 			CancellationToken token = cts.Token;
 			while (!cts.IsCancellationRequested)
 			{
-				blueprint.lightPosition.X = 100 * (float)MathF.Cos(angle);
-				blueprint.lightPosition.Y = 100 * (float)MathF.Sin(angle);
+				blueprint.lightPosition.X = 200 * (float)MathF.Cos(angle);
+				blueprint.lightPosition.Y = 200 * (float)MathF.Sin(angle);
 				angle += 0.3f;
 				form.BeginInvoke(blueprint.Draw);
-				Thread.Sleep(250);
+				Thread.Sleep(500);
 			}
 		}
 	}

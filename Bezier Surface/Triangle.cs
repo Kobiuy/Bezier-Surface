@@ -26,26 +26,24 @@ namespace Bezier_Surface
 		{
 			g.DrawLine(new Pen(Color.BlueViolet, 1), v1.pointAR.X, v1.pointAR.Y, v2.pointAR.X, v2.pointAR.Y);
 		}
-		public void Rotate(int alfa, int beta)
+		public void Rotate(Matrix4x4 MX, Matrix4x4 MZ)
 		{
-			vertices[0].Rotate(alfa, beta);
-			vertices[1].Rotate(alfa, beta);
-			vertices[2].Rotate(alfa, beta);
-
+			vertices[0].Rotate(MX, MZ);
+			vertices[1].Rotate(MX, MZ);
+			vertices[2].Rotate(MX, MZ);
 		}
-
-
 		public void FillTriangle(Blueprint blueprint, FastBitmap fbtmp)
 		{
 			int minY = int.MaxValue;
 			int maxY = int.MinValue;
-			Dictionary<int, List<Edge>> AET = new Dictionary<int, List<Edge>>();
+			Dictionary<int, List<Edge>> AET = new Dictionary<int, List<Edge>>(); //TODO Zamień dictionary na array
 			Dictionary<int, List<Edge>> ET = new Dictionary<int, List<Edge>>();
 			List<Edge> edges = new List<Edge>();
 			edges.Add(new Edge(vertices[0], vertices[1]));
 			edges.Add(new Edge(vertices[2], vertices[1]));
 			edges.Add(new Edge(vertices[0], vertices[2]));
-
+			var ioil = (new Vector3(blueprint.lightColor.R, blueprint.lightColor.G, blueprint.lightColor.B) / 255f) *
+		   (new Vector3(blueprint.survaceColor.R, blueprint.survaceColor.G, blueprint.survaceColor.B) / 255f);
 			foreach (Vertex v in vertices)
 			{
 				minY = v.pointAR.Y < minY ? (int)v.pointAR.Y : minY;
@@ -68,14 +66,16 @@ namespace Bezier_Surface
 
 			int y = minY;
 			Edge first = null;
+			List<Edge> tempForSorting = new List<Edge>();
 			while (AET.Count != 0 || ET.Count != 0)
 			{
-				first = UpdateAET(AET, ET, y++, fbtmp, first, blueprint);
+				first = UpdateAET(AET, ET, y++, fbtmp, first, blueprint, tempForSorting, ioil);
 			}
 		}
 
-		public Edge UpdateAET(Dictionary<int, List<Edge>> AET, Dictionary<int, List<Edge>> ET, int y, FastBitmap fbtmp, Edge prefFirst, Blueprint blueprint)
+		public Edge UpdateAET(Dictionary<int, List<Edge>> AET, Dictionary<int, List<Edge>> ET, int y, FastBitmap fbtmp, Edge prefFirst, Blueprint blueprint, List<Edge> tempForSorting, Vector3 ioil)
 		{
+			tempForSorting.Clear();
 			if (ET.ContainsKey(y))
 			{
 				foreach (Edge e in ET[y])
@@ -86,7 +86,6 @@ namespace Bezier_Surface
 				}
 				ET.Remove(y);
 			}
-			List<Edge> tempForSorting = new List<Edge>();
 			foreach (List<Edge> edges in AET.Values)
 			{
 				tempForSorting.AddRange(edges);
@@ -113,8 +112,9 @@ namespace Bezier_Surface
 					{
 						int X = i + fbtmp.Width / 2;
 						int Y = -y + fbtmp.Height / 2;
+						Color color = CalculateColor(blueprint, new Vector2(i, y), ioil);
 						if (X >= 0 && Y >= 0 && X < fbtmp.Width && Y < fbtmp.Height)
-							fbtmp.SetPixel(X, Y, CalculateColor(blueprint, new Vector2(i, y)));
+							fbtmp.SetPixel(X, Y, color);
 					}
 					// TODO Temporary While Stripes Solution
 					if ((int)edge.yMax != (int)edge.next.yMin && (int)edge.yMin != (int)edge.next.yMax)
@@ -133,28 +133,32 @@ namespace Bezier_Surface
 			}
 			return first;
 		}
-		public Color CalculateColor(Blueprint bp, Vector2 point)
+		public Color CalculateColor(Blueprint bp, Vector2 point, Vector3 ioil)
 		{
-			var ioil = new Vector3(bp.lightColor.R / 255f, bp.lightColor.G / 255f, bp.lightColor.B / 255f) *
-					   new Vector3(bp.survaceColor.R / 255f, bp.survaceColor.G / 255f, bp.survaceColor.B / 255f);
+			(var normal, var z) = InterpolateNormalAndZ(vertices[0], vertices[1], vertices[2], point, bp);
 
-			(var normal, var z) = InterpolateNormalAndZ(vertices[0], vertices[1], vertices[2], point);
-
-			Vector3 L = Vector3.Normalize(bp.lightPosition - new Vector3(point, z)); // TODO
+			Vector3 L = Vector3.Normalize(bp.lightPosition - new Vector3(point, z)); // TODO check
 			var NL = Vector3.Dot(normal, L);
 			Vector3 R = 2 * NL * normal - L;
 			var V = new Vector3(0, 0, 1);
 			var colorResult = (bp.kd * ioil * Math.Clamp(NL, 0, 1) + bp.ks * ioil * (float)Math.Pow(Math.Clamp(Vector3.Dot(V, R), 0, 1), bp.m));
 
 			int r = (int)Math.Clamp(Math.Round(colorResult.X * 255), 0, 255);
-			int g = (int)Math.Clamp(Math.Round(colorResult.Y * 255), 0, 255);
+			int g = (int)Math.Clamp(Math.Round(colorResult.Y * 255), 0, 255); 
 			int b = (int)Math.Clamp(Math.Round(colorResult.Z * 255), 0, 255);
-
 			return Color.FromArgb(255, r, g, b);
 		}
-
-		public (Vector3, float) InterpolateNormalAndZ(Vertex v1, Vertex v2, Vertex v3, Vector2 P)
+		public (Vector3, float) InterpolateNormalAndZ(Vertex v1, Vertex v2, Vertex v3, Vector2 P, Blueprint bp)
 		{
+			var v1N = v1.normalAR;
+			var v2N = v2.normalAR;
+			var v3N = v3.normalAR;
+			if (bp.useTexture)
+			{
+				v1N = v1.normalModified;
+				v2N = v2.normalModified;
+				v3N = v3.normalModified;
+			}
 			float denominator = (v1.pointAR.Y - v3.pointAR.Y) * (v2.pointAR.X - v3.pointAR.X)
 							  + (v3.pointAR.X - v1.pointAR.X) * (v2.pointAR.Y - v3.pointAR.Y);
 
@@ -163,20 +167,27 @@ namespace Bezier_Surface
 				return (Vector3.Zero, 0);
 			}
 
-			float lambda1 = ((v2.pointAR.Y - v3.pointAR.Y) * (P.X - v3.pointAR.X)
+			float a = ((v2.pointAR.Y - v3.pointAR.Y) * (P.X - v3.pointAR.X)
 							+ (v3.pointAR.X - v2.pointAR.X) * (P.Y - v3.pointAR.Y)) / denominator;
-			float lambda2 = ((v3.pointAR.Y - v1.pointAR.Y) * (P.X - v3.pointAR.X)
+			float b = ((v3.pointAR.Y - v1.pointAR.Y) * (P.X - v3.pointAR.X)
 							+ (v1.pointAR.X - v3.pointAR.X) * (P.Y - v3.pointAR.Y)) / denominator;
-			float lambda3 = 1 - lambda1 - lambda2;
+			float c = 1 - a - b;
 
-			Vector3 interpolatedNormal = lambda1 * v1.normalAR + lambda2 * v2.normalAR + lambda3 * v3.normalAR;
+			Vector3 interpolatedNormal = a * v1N + b * v2N + c * v3N;
 			if (interpolatedNormal == Vector3.Zero)
 			{
 				return (Vector3.Zero, 0);
 			}
 			interpolatedNormal = Vector3.Normalize(interpolatedNormal);
-			float interpolatedZ = lambda1 * v1.pointAR.Z + lambda2 * v2.pointAR.Z + lambda3 * v3.pointAR.Z;
+			float interpolatedZ = a * v1.pointAR.Z + b * v2.pointAR.Z + c * v3.pointAR.Z;
 			return (interpolatedNormal, interpolatedZ);
+		}
+
+		internal void ResetRotationChecker()
+		{
+			vertices[0].Reset();
+			vertices[1].Reset();
+			vertices[2].Reset();
 		}
 	}
 

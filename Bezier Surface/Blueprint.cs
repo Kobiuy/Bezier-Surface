@@ -5,11 +5,14 @@ namespace Bezier_Surface
 {
 	internal class Blueprint
 	{
-		public readonly static string FileName = "BezierDolek.txt";
+		public string controlPointsFilePath = "punkty3.txt";
+		public string textureFilePatch = "normal_map.jpg";
+		public Bitmap texture { get; set; }
 		public Color lightColor = Color.White;
 		public bool showControlPoints = true;
 		public bool showMesh = true;
-		public Vector3 lightPosition = new Vector3(0, 0, 1000);
+		public Vector3 lightPosition = new Vector3(0, 0, 500);
+		public bool useTexture { get; set; }
 		public Bitmap bitmap { get; set; }
 		public PictureBox Canvas { get; set; }
 		public int m { get; set; } = 10;
@@ -26,11 +29,16 @@ namespace Bezier_Surface
 		{
 			bitmap = new Bitmap(width, height);
 			this.Canvas = Canvas;
-
+			LoadMap();
 			LoadPoints();
 			CreateTriangularMesh();
 			Rotate();
 			Draw();
+		}
+
+		private void LoadMap()
+		{
+			texture = new Bitmap(new Bitmap(textureFilePatch));
 		}
 
 		public void SetOriginInCenter(Graphics g)
@@ -41,7 +49,7 @@ namespace Bezier_Surface
 		}
 		public void LoadPoints()
 		{
-			using (var streamReader = new StreamReader(FileName))
+			using (var streamReader = new StreamReader(controlPointsFilePath))
 			{
 				int i = 0;
 				while (!streamReader.EndOfStream && i != 16)
@@ -59,7 +67,10 @@ namespace Bezier_Surface
 		{
 			using (var g = Graphics.FromImage(bitmap))
 			{
-				g.Clear(Color.White);
+				using (var fbtmp = bitmap.FastLock())
+				{
+					fbtmp.Clear(Color.White);
+				}
 				SetOriginInCenter(g);
 				if (showControlPoints)
 				{
@@ -91,7 +102,16 @@ namespace Bezier_Surface
 			float step = 1.0f / (float)precision;
 			Vertex[,] vertices = new Vertex[precision + 1, precision + 1];
 			float u, v;
-			// dla każdegu u i dla każdego v są punkty, punkt to suma i,j
+
+			var B3 = new float[4, precision+1];
+			for (int i = 0; i <= precision; ++i) //n
+			{
+				u = step * i;
+				for (int j = 0; j < 4; j++) // m
+				{
+					B3[j, i] = MathHelper.CalcB(j, 3, u);
+				}
+			}
 			for (int r = 0; r <= precision; ++r) //n
 			{
 				u = step * r;
@@ -106,18 +126,15 @@ namespace Bezier_Surface
 					{
 						for (int j = 0; j < 4; j++) // m
 						{
-							vector += CPs[4 * i + j].pointBR * MathHelper.CalcB(i, 3, u) * MathHelper.CalcB(j, 3, v);
+							vector += CPs[4 * i + j].pointBR * B3[i, r] * B3[j, c];
+							if (j != 3)
+							{
+								pu += 3 * (CPs[(j + 1) * 4 + i].pointBR - CPs[j * 4 + i].pointBR) * MathHelper.CalcB(j, 2, u) * B3[i, c];
+								pv += 3 * (CPs[i * 4 + j + 1].pointBR - CPs[i * 4 + j].pointBR) * B3[i, r] * MathHelper.CalcB(j, 2, v);
+							}
+						}
+					}
 
-						}
-					}
-					for (int i = 0; i < 4; i++)
-					{
-						for (int j = 0; j < 3; j++)
-						{
-							pu += 3 * (CPs[(j + 1) * 4 + i].pointBR - CPs[j * 4 + i].pointBR) * MathHelper.CalcB(j, 2, u) * MathHelper.CalcB(i, 3, v);
-							pv += 3 * (CPs[i * 4 + j + 1].pointBR - CPs[i * 4 + j].pointBR) * MathHelper.CalcB(i, 3, u) * MathHelper.CalcB(j, 2, v);
-						}
-					}
 					vertices[r, c] = new Vertex(new Vector3((int)vector.X, (int)vector.Y, (int)vector.Z), u, v, pu, pv);
 				}
 			}
@@ -127,6 +144,10 @@ namespace Bezier_Surface
 		public void CreateTriangularMesh()
 		{
 			var vertices = SubDivideCPs();
+			foreach (var vertex in vertices)
+			{
+				vertex.SetColor(texture);
+			}
 			triangularMesh = new List<Triangle>();
 			for (int c = 0; c < precision; ++c)
 			{
@@ -139,13 +160,20 @@ namespace Bezier_Surface
 		}
 		public void Rotate()
 		{
+			var MZ = Matrix4x4.CreateRotationZ((alfa * MathF.PI) / 180f);
+			var MX = Matrix4x4.CreateRotationX((beta * MathF.PI) / 180f);
 			foreach (Triangle triangle in triangularMesh)
 			{
-				triangle.Rotate(alfa, beta);
+				triangle.ResetRotationChecker();
+			}
+			foreach (Triangle triangle in triangularMesh)
+			{
+				triangle.Rotate(MX, MZ);
 			}
 			foreach (var cp in CPs)
 			{
-				cp.Rotate(alfa, beta);
+				cp.reseted = false;
+				cp.Rotate(MX, MZ);
 			}
 		}
 	}

@@ -103,5 +103,20 @@ namespace Bezier_Surface
 			blueprint.showMesh = meshCheckBox.Checked;
 			blueprint.Draw();
 		}
+
+		private void textureButton_CheckedChanged(object sender, EventArgs e)
+		{
+			blueprint.useTexture = textureButton.Checked;
+			if (textureButton.Checked)
+			{
+				blueprint.Rotate();
+				blueprint.Draw();
+			}
+		}
+
+		private void solidColorButton_CheckedChanged(object sender, EventArgs e)
+		{
+
+		}
 	}
 }

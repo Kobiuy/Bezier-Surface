@@ -229,7 +229,7 @@
 			// precisionTrackBar
 			// 
 			precisionTrackBar.Location = new Point(3, 287);
-			precisionTrackBar.Maximum = 100;
+			precisionTrackBar.Maximum = 300;
 			precisionTrackBar.Minimum = 1;
 			precisionTrackBar.Name = "precisionTrackBar";
 			precisionTrackBar.Size = new Size(130, 56);
@@ -277,6 +277,7 @@
 			textureButton.TabIndex = 13;
 			textureButton.Text = "Teksture";
 			textureButton.UseVisualStyleBackColor = true;
+			textureButton.CheckedChanged += textureButton_CheckedChanged;
 			// 
 			// solidColorButton
 			// 
@@ -289,6 +290,7 @@
 			solidColorButton.TabStop = true;
 			solidColorButton.Text = "Solid Color";
 			solidColorButton.UseVisualStyleBackColor = true;
+			solidColorButton.CheckedChanged += solidColorButton_CheckedChanged;
 			// 
 			// label4
 			// 
@@ -387,12 +389,12 @@
 			// zLightTrackbar
 			// 
 			zLightTrackbar.Location = new Point(3, 842);
-			zLightTrackbar.Maximum = 300;
-			zLightTrackbar.Minimum = 1;
+			zLightTrackbar.Maximum = 1000;
+			zLightTrackbar.Minimum = 100;
 			zLightTrackbar.Name = "zLightTrackbar";
 			zLightTrackbar.Size = new Size(130, 56);
 			zLightTrackbar.TabIndex = 27;
-			zLightTrackbar.Value = 200;
+			zLightTrackbar.Value = 500;
 			zLightTrackbar.Scroll += zLightTrackbar_Scroll;
 			// 
 			// zLightLabel
