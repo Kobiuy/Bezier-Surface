@@ -6,18 +6,22 @@ namespace Bezier_Surface
 	internal class Blueprint
 	{
 		public string controlPointsFilePath = "punkty3.txt";
-		public string textureFilePatch = "normal_map.jpg";
+		public string normalMapFilePatch = "brick_normalmap.png";
+		public string textureFilePatch = "texture.jpg";
+
+		public Bitmap normalMap { get; set; }
 		public Bitmap texture { get; set; }
 		public Color lightColor = Color.White;
 		public bool showControlPoints = true;
 		public bool showMesh = true;
 		public Vector3 lightPosition = new Vector3(0, 0, 500);
-		public bool useTexture { get; set; }
+		public bool useNormalMap { get; set; }
 		public Bitmap bitmap { get; set; }
 		public PictureBox Canvas { get; set; }
 		public int m { get; set; } = 10;
 		public float ks { get; set; } = 0.2f;
 		public float kd { get; set; } = 0.8f;
+		public bool useTexture { get; set; }
 
 		public Vertex[] CPs = new Vertex[16];
 		public List<Triangle> triangularMesh = new List<Triangle>();
@@ -31,12 +35,17 @@ namespace Bezier_Surface
 			this.Canvas = Canvas;
 			LoadMap();
 			LoadPoints();
+			LoadTexture();
 			CreateTriangularMesh();
 			Rotate();
 			Draw();
 		}
 
 		private void LoadMap()
+		{
+			normalMap = new Bitmap(new Bitmap(normalMapFilePatch));
+		}
+		private void LoadTexture()
 		{
 			texture = new Bitmap(new Bitmap(textureFilePatch));
 		}
@@ -146,7 +155,8 @@ namespace Bezier_Surface
 			var vertices = SubDivideCPs();
 			foreach (var vertex in vertices)
 			{
-				vertex.SetColor(texture);
+				vertex.SetNormalVectors(normalMap);
+				vertex.SetColorFromTexture(texture);
 			}
 			triangularMesh = new List<Triangle>();
 			for (int c = 0; c < precision; ++c)

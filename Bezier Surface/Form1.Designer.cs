@@ -44,6 +44,7 @@
 			precisionLabel = new Label();
 			lightColorButton = new Button();
 			groupBox1 = new GroupBox();
+			normalMapButton = new RadioButton();
 			textureButton = new RadioButton();
 			solidColorButton = new RadioButton();
 			label4 = new Label();
@@ -259,14 +260,26 @@
 			// groupBox1
 			// 
 			groupBox1.AutoSize = true;
+			groupBox1.Controls.Add(normalMapButton);
 			groupBox1.Controls.Add(textureButton);
 			groupBox1.Controls.Add(solidColorButton);
 			groupBox1.Location = new Point(3, 404);
 			groupBox1.Name = "groupBox1";
-			groupBox1.Size = new Size(116, 106);
+			groupBox1.Size = new Size(126, 136);
 			groupBox1.TabIndex = 17;
 			groupBox1.TabStop = false;
 			groupBox1.Text = "Surface Type";
+			// 
+			// normalMapButton
+			// 
+			normalMapButton.AutoSize = true;
+			normalMapButton.Location = new Point(6, 86);
+			normalMapButton.Name = "normalMapButton";
+			normalMapButton.Size = new Size(114, 24);
+			normalMapButton.TabIndex = 15;
+			normalMapButton.Text = "Normal Map";
+			normalMapButton.UseVisualStyleBackColor = true;
+			normalMapButton.CheckedChanged += normalMapbutton_CheckedChanged;
 			// 
 			// textureButton
 			// 
@@ -295,7 +308,7 @@
 			// label4
 			// 
 			label4.AutoSize = true;
-			label4.Location = new Point(3, 513);
+			label4.Location = new Point(3, 543);
 			label4.Name = "label4";
 			label4.Size = new Size(30, 20);
 			label4.TabIndex = 19;
@@ -303,7 +316,7 @@
 			// 
 			// kdTrackbar
 			// 
-			kdTrackbar.Location = new Point(3, 536);
+			kdTrackbar.Location = new Point(3, 566);
 			kdTrackbar.Maximum = 9;
 			kdTrackbar.Minimum = 1;
 			kdTrackbar.Name = "kdTrackbar";
@@ -315,7 +328,7 @@
 			// kdLabel
 			// 
 			kdLabel.AutoSize = true;
-			kdLabel.Location = new Point(3, 595);
+			kdLabel.Location = new Point(3, 625);
 			kdLabel.Name = "kdLabel";
 			kdLabel.Size = new Size(71, 20);
 			kdLabel.TabIndex = 20;
@@ -324,7 +337,7 @@
 			// label6
 			// 
 			label6.AutoSize = true;
-			label6.Location = new Point(3, 615);
+			label6.Location = new Point(3, 645);
 			label6.Name = "label6";
 			label6.Size = new Size(27, 20);
 			label6.TabIndex = 22;
@@ -332,7 +345,7 @@
 			// 
 			// ksTrackbar
 			// 
-			ksTrackbar.Location = new Point(3, 638);
+			ksTrackbar.Location = new Point(3, 668);
 			ksTrackbar.Name = "ksTrackbar";
 			ksTrackbar.Size = new Size(130, 56);
 			ksTrackbar.TabIndex = 21;
@@ -342,7 +355,7 @@
 			// ksLabel
 			// 
 			ksLabel.AutoSize = true;
-			ksLabel.Location = new Point(3, 697);
+			ksLabel.Location = new Point(3, 727);
 			ksLabel.Name = "ksLabel";
 			ksLabel.Size = new Size(71, 20);
 			ksLabel.TabIndex = 23;
@@ -351,7 +364,7 @@
 			// label8
 			// 
 			label8.AutoSize = true;
-			label8.Location = new Point(3, 717);
+			label8.Location = new Point(3, 747);
 			label8.Name = "label8";
 			label8.Size = new Size(25, 20);
 			label8.TabIndex = 25;
@@ -359,7 +372,7 @@
 			// 
 			// mTrackbar
 			// 
-			mTrackbar.Location = new Point(3, 740);
+			mTrackbar.Location = new Point(3, 770);
 			mTrackbar.Maximum = 100;
 			mTrackbar.Minimum = 1;
 			mTrackbar.Name = "mTrackbar";
@@ -371,7 +384,7 @@
 			// mLabel
 			// 
 			mLabel.AutoSize = true;
-			mLabel.Location = new Point(3, 799);
+			mLabel.Location = new Point(3, 829);
 			mLabel.Name = "mLabel";
 			mLabel.Size = new Size(68, 20);
 			mLabel.TabIndex = 26;
@@ -380,7 +393,7 @@
 			// label10
 			// 
 			label10.AutoSize = true;
-			label10.Location = new Point(3, 819);
+			label10.Location = new Point(3, 849);
 			label10.Name = "label10";
 			label10.Size = new Size(58, 20);
 			label10.TabIndex = 28;
@@ -388,7 +401,7 @@
 			// 
 			// zLightTrackbar
 			// 
-			zLightTrackbar.Location = new Point(3, 842);
+			zLightTrackbar.Location = new Point(3, 872);
 			zLightTrackbar.Maximum = 1000;
 			zLightTrackbar.Minimum = 100;
 			zLightTrackbar.Name = "zLightTrackbar";
@@ -400,7 +413,7 @@
 			// zLightLabel
 			// 
 			zLightLabel.AutoSize = true;
-			zLightLabel.Location = new Point(3, 901);
+			zLightLabel.Location = new Point(3, 931);
 			zLightLabel.Name = "zLightLabel";
 			zLightLabel.Size = new Size(76, 20);
 			zLightLabel.TabIndex = 29;
@@ -409,7 +422,7 @@
 			// animationButton
 			// 
 			animationButton.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-			animationButton.Location = new Point(3, 924);
+			animationButton.Location = new Point(3, 954);
 			animationButton.Name = "animationButton";
 			animationButton.Size = new Size(163, 29);
 			animationButton.TabIndex = 30;
@@ -478,5 +491,6 @@
 		private Label zLightLabel;
 		private CheckBox meshCheckBox;
 		private Button animationButton;
+		private RadioButton normalMapButton;
 	}
 }

@@ -118,5 +118,15 @@ namespace Bezier_Surface
 		{
 
 		}
+
+		private void normalMapbutton_CheckedChanged(object sender, EventArgs e)
+		{
+			blueprint.useNormalMap = normalMapButton.Checked;
+			if (normalMapButton.Checked)
+			{
+				blueprint.Rotate();
+				blueprint.Draw();
+			}
+		}
 	}
 }
