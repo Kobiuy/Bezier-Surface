@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FastBitmapLib;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
@@ -18,7 +19,7 @@ namespace Bezier_Surface
 		{
 			this.blueprint = blueprint;
 			ChangeState();
-			this.form = form;	
+			this.form = form;
 		}
 		public void ChangeState()
 		{
@@ -41,14 +42,17 @@ namespace Bezier_Surface
 		private void Animate()
 		{
 			float angle = 0f;
+			//Bitmap bitmap = new Bitmap(blueprint.Canvas.Width, blueprint.Canvas.Height);
 			CancellationToken token = cts.Token;
 			while (!cts.IsCancellationRequested)
 			{
-				blueprint.lightPosition.X = 200 * (float)MathF.Cos(angle);
-				blueprint.lightPosition.Y = 200 * (float)MathF.Sin(angle);
+				blueprint.lightPosition.X = 300 * (float)MathF.Cos(angle);
+				blueprint.lightPosition.Y = 300 * (float)MathF.Sin(angle);
 				angle += 0.3f;
-				form.BeginInvoke(blueprint.Draw);
-				Thread.Sleep(500);
+				blueprint.AnimatorDraw();
+				form.BeginInvoke(blueprint.Refresh);
+				//form.BeginInvoke(blueprint.DrawAndRefresh);
+				Thread.Sleep(100);
 			}
 		}
 	}

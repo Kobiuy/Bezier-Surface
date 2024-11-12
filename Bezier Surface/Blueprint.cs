@@ -5,16 +5,16 @@ namespace Bezier_Surface
 {
 	internal class Blueprint
 	{
-		public string controlPointsFilePath = "punkty3.txt";
-		public string normalMapFilePatch = "brick_normalmap.png";
-		public string textureFilePatch = "texture.jpg";
-
+		public string controlPointsFilePath = "punkty1.txt";
+		public string normalMapFilePatch;
+		public string textureFilePatch;
 		public Bitmap normalMap { get; set; }
 		public Bitmap texture { get; set; }
 		public Color lightColor = Color.White;
 		public bool showControlPoints = true;
-		public bool showMesh = true;
+		public bool showMesh { get; set; } = true;
 		public Vector3 lightPosition = new Vector3(0, 0, 500);
+		public static readonly object lockObject = new object();
 		public bool useNormalMap { get; set; }
 		public Bitmap bitmap { get; set; }
 		public PictureBox Canvas { get; set; }
@@ -22,6 +22,7 @@ namespace Bezier_Surface
 		public float ks { get; set; } = 0.2f;
 		public float kd { get; set; } = 0.8f;
 		public bool useTexture { get; set; }
+		public bool showFilling { get; internal set; } = true;
 
 		public Vertex[] CPs = new Vertex[16];
 		public List<Triangle> triangularMesh = new List<Triangle>();
@@ -33,21 +34,22 @@ namespace Bezier_Surface
 		{
 			bitmap = new Bitmap(width, height);
 			this.Canvas = Canvas;
-			LoadMap();
 			LoadPoints();
-			LoadTexture();
 			CreateTriangularMesh();
 			Rotate();
-			Draw();
+			DrawAndRefresh();
 		}
 
-		private void LoadMap()
+		public void LoadMap()
 		{
 			normalMap = new Bitmap(new Bitmap(normalMapFilePatch));
+			useNormalMap = true;
+			CreateTriangularMesh();
 		}
-		private void LoadTexture()
+		public void LoadTexture()
 		{
 			texture = new Bitmap(new Bitmap(textureFilePatch));
+			CreateTriangularMesh();
 		}
 
 		public void SetOriginInCenter(Graphics g)
@@ -72,11 +74,34 @@ namespace Bezier_Surface
 		{
 			CPs = CPs.OrderBy(p => p.pointBR.X).ThenBy(p => p.pointBR.Y).ToArray();
 		}
+		public void DrawAndRefresh()
+		{
+			lock (lockObject)
+			{
+				Draw();
+				Canvas.Refresh();
+			}
+		}
+		public void Refresh()
+		{
+			lock (lockObject)
+			{
+				Canvas.Refresh();
+			}
+		}
+		public void AnimatorDraw()
+		{
+			lock (lockObject)
+			{
+				Draw();
+			}
+		}
 		public void Draw()
 		{
-			using (var g = Graphics.FromImage(bitmap))
+			var btmp = bitmap;
+			using (var g = Graphics.FromImage(btmp))
 			{
-				using (var fbtmp = bitmap.FastLock())
+				using (var fbtmp = btmp.FastLock())
 				{
 					fbtmp.Clear(Color.White);
 				}
@@ -88,11 +113,14 @@ namespace Bezier_Surface
 						g.DrawEllipse(new Pen(Color.RebeccaPurple, 10), vertex.pointAR.X - 5, vertex.pointAR.Y - 5, 10, 10);
 					}
 				}
-				using (var fbtmp = bitmap.FastLock())
+				if (showFilling)
 				{
-					foreach (Triangle triangle in triangularMesh)
+					using (var fbtmp = btmp.FastLock())
 					{
-						triangle.FillTriangle(this, fbtmp);
+						foreach (Triangle triangle in triangularMesh)
+						{
+							triangle.FillTriangle(this, fbtmp);
+						}
 					}
 				}
 				if (showMesh)
@@ -102,7 +130,6 @@ namespace Bezier_Surface
 						triangle.Draw(g);
 					}
 				}
-				Canvas.Refresh();
 			}
 		}
 
@@ -112,7 +139,7 @@ namespace Bezier_Surface
 			Vertex[,] vertices = new Vertex[precision + 1, precision + 1];
 			float u, v;
 
-			var B3 = new float[4, precision+1];
+			var B3 = new float[4, precision + 1];
 			for (int i = 0; i <= precision; ++i) //n
 			{
 				u = step * i;
@@ -155,9 +182,16 @@ namespace Bezier_Surface
 			var vertices = SubDivideCPs();
 			foreach (var vertex in vertices)
 			{
-				vertex.SetNormalVectors(normalMap);
-				vertex.SetColorFromTexture(texture);
+				if (useNormalMap)
+				{
+					vertex.SetNormalVectors(normalMap);
+				}
+				if (useTexture)
+				{
+					vertex.SetColorFromTexture(texture);
+				}
 			}
+
 			triangularMesh = new List<Triangle>();
 			for (int c = 0; c < precision; ++c)
 			{
@@ -166,6 +200,7 @@ namespace Bezier_Surface
 					triangularMesh.Add(new Triangle(vertices[r, c], vertices[r, c + 1], vertices[r + 1, c + 1]));
 					triangularMesh.Add(new Triangle(vertices[r, c], vertices[r + 1, c], vertices[r + 1, c + 1]));
 				}
+
 			}
 		}
 		public void Rotate()

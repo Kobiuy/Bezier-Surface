@@ -10,7 +10,7 @@ namespace Bezier_Surface
 		public Vector3 pvBR;
 		public Vector3 normalBR;
 		public Vector3 normalAR;
-		public Vector3 normalModified;
+		public Vector3 normalUsingNormalMap;
 		public Vector3 pvAR;
 		public Vector3 puAR;
 		public Vector3 pointAR;
@@ -43,10 +43,9 @@ namespace Bezier_Surface
 				puAR = Vector3.Normalize(puAR);
 				pvAR = Vector3.Normalize(pvAR);
 				normalAR = Vector3.Normalize(Vector3.Cross(puAR, pvAR));
-				ModifyNormal();
+				//ModifyNormal();
 				reseted = true;
-				normalModified = Vector3.Normalize(normalModified);
-
+				//normalUsingNormalMap = Vector3.Normalize(normalUsingNormalMap);
 			}
 		}
 
@@ -86,9 +85,17 @@ namespace Bezier_Surface
 			var Z = (color.B / 127.5f) - 1;
 			normalMapN = Vector3.Normalize(new Vector3(X, Y, Z));
 		}
-		public void ModifyNormal()
+		private void ModifyNormal()
 		{
-			normalModified = new Vector3(
+			normalUsingNormalMap = new Vector3(
+				puAR.X * normalMapN.X + pvAR.X * normalMapN.Y + normalAR.X * normalMapN.Z,
+				puAR.Y * normalMapN.X + pvAR.Y * normalMapN.Y + normalAR.Y * normalMapN.Z,
+				puAR.Z * normalMapN.X + pvAR.Z * normalMapN.Y + normalAR.Z * normalMapN.Z
+			);
+		}
+		public static Vector3 CreateNormalUsingNormalMap(Vector3 puAR, Vector3 pvAR, Vector3 normalAR, Vector3 normalMapN)
+		{
+			return new Vector3(
 				puAR.X * normalMapN.X + pvAR.X * normalMapN.Y + normalAR.X * normalMapN.Z,
 				puAR.Y * normalMapN.X + pvAR.Y * normalMapN.Y + normalAR.Y * normalMapN.Z,
 				puAR.Z * normalMapN.X + pvAR.Z * normalMapN.Y + normalAR.Z * normalMapN.Z
