@@ -59,7 +59,6 @@ namespace Bezier_Surface
 			blueprint.bitmap = new Bitmap(Canvas.Width, Canvas.Height);
 			Canvas.Image = blueprint.bitmap;
 			blueprint.DrawAndRefresh();
-
 		}
 
 		private void lightColorButton_Click(object sender, EventArgs e)
@@ -104,12 +103,11 @@ namespace Bezier_Surface
 		{
 			animator.ChangeState();
 			animationButton.Text = animator.running ? "Pause Animation" : "Start Animation";
-
 		}
 
 		private void meshCheckbox_CheckedChanged(object sender, EventArgs e)
 		{
-			 blueprint.showMesh = meshCheckBox.Checked;
+			blueprint.showMesh = meshCheckBox.Checked;
 			blueprint.DrawAndRefresh();
 		}
 
@@ -120,14 +118,17 @@ namespace Bezier_Surface
 				var ofd = new OpenFileDialog();
 				ofd.Filter = "Image Files(*.BMP;*.JPG;*.GIF;*.PNG)|*.BMP;*.JPG;*.GIF;*.PNG";
 				ofd.Title = "Select texture file";
+				ofd.InitialDirectory = Application.StartupPath + "Textures\\";
 				if (ofd.ShowDialog() != DialogResult.OK)
 				{
 					textureButton.Checked = false;
 					return;
 				}
-				blueprint.useTexture = true;
 				blueprint.textureFilePatch = ofd.FileName;
+
 				blueprint.LoadTexture();
+
+				blueprint.useTexture = true;
 			}
 			else
 			{
@@ -147,6 +148,7 @@ namespace Bezier_Surface
 					var ofd = new OpenFileDialog();
 					ofd.Filter = "Image Files(*.BMP;*.JPG;*.GIF;*.PNG)|*.BMP;*.JPG;*.GIF;*.PNG";
 					ofd.Title = "Select normal map file";
+					ofd.InitialDirectory = Application.StartupPath + "NormalMaps\\";
 					if (ofd.ShowDialog() != DialogResult.OK)
 					{
 						normalmapCheckbox.Checked = false;
@@ -168,6 +170,11 @@ namespace Bezier_Surface
 		{
 			blueprint.showFilling = fillingCheckbox.Checked;
 			blueprint.DrawAndRefresh();
+		}
+
+		private void speedTrackbar_Scroll(object sender, EventArgs e)
+		{
+			animator.speed = speedTrackbar.Value;	
 		}
 	}
 }

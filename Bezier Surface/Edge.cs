@@ -2,11 +2,11 @@
 
 public class Edge
 {
-	public Edge next;
-	public float x;
-	public float yMax;
-	public float yMin;
-	public float invSlope;
+	public Edge next { get; set; }
+	public float x { get; set; }
+	public float yMax { get; set; }
+	public float yMin { get; set; }
+	public float invSlope { get; set; }
 
 	public Edge(Vertex V1, Vertex V2)
 	{

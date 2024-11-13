@@ -14,6 +14,7 @@ namespace Bezier_Surface
 		private Thread animationThread;
 		private Blueprint blueprint;
 		private Form form;
+		public int speed = 50;
 		public bool running { get; private set; }
 		public Animator(Blueprint blueprint, Form form)
 		{
@@ -42,17 +43,15 @@ namespace Bezier_Surface
 		private void Animate()
 		{
 			float angle = 0f;
-			//Bitmap bitmap = new Bitmap(blueprint.Canvas.Width, blueprint.Canvas.Height);
 			CancellationToken token = cts.Token;
 			while (!cts.IsCancellationRequested)
 			{
 				blueprint.lightPosition.X = 300 * (float)MathF.Cos(angle);
 				blueprint.lightPosition.Y = 300 * (float)MathF.Sin(angle);
-				angle += 0.3f;
+				angle += 0.0036f*speed;
 				blueprint.AnimatorDraw();
 				form.BeginInvoke(blueprint.Refresh);
-				//form.BeginInvoke(blueprint.DrawAndRefresh);
-				Thread.Sleep(100);
+				Thread.Sleep(25);
 			}
 		}
 	}

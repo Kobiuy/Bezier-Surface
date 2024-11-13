@@ -54,6 +54,7 @@
 			zLightLabel = new Label();
 			zLightTrackbar = new TrackBar();
 			animationButton = new Button();
+			speedTrackbar = new TrackBar();
 			((System.ComponentModel.ISupportInitialize)Canvas).BeginInit();
 			((System.ComponentModel.ISupportInitialize)splitContainer1).BeginInit();
 			splitContainer1.Panel1.SuspendLayout();
@@ -68,6 +69,7 @@
 			((System.ComponentModel.ISupportInitialize)ksTrackbar).BeginInit();
 			((System.ComponentModel.ISupportInitialize)mTrackbar).BeginInit();
 			((System.ComponentModel.ISupportInitialize)zLightTrackbar).BeginInit();
+			((System.ComponentModel.ISupportInitialize)speedTrackbar).BeginInit();
 			SuspendLayout();
 			// 
 			// Canvas
@@ -119,6 +121,7 @@
 			flowLayoutPanel1.Controls.Add(zLightLabel);
 			flowLayoutPanel1.Controls.Add(zLightTrackbar);
 			flowLayoutPanel1.Controls.Add(animationButton);
+			flowLayoutPanel1.Controls.Add(speedTrackbar);
 			flowLayoutPanel1.Dock = DockStyle.Fill;
 			flowLayoutPanel1.FlowDirection = FlowDirection.TopDown;
 			flowLayoutPanel1.Location = new Point(0, 0);
@@ -199,7 +202,7 @@
 			// 
 			betaSlider.Location = new Point(1, 193);
 			betaSlider.Margin = new Padding(1);
-			betaSlider.Maximum = 90;
+			betaSlider.Maximum = 45;
 			betaSlider.Name = "betaSlider";
 			betaSlider.Size = new Size(130, 56);
 			betaSlider.TabIndex = 2;
@@ -218,7 +221,7 @@
 			// precisionTrackBar
 			// 
 			precisionTrackBar.Location = new Point(3, 273);
-			precisionTrackBar.Maximum = 150;
+			precisionTrackBar.Maximum = 100;
 			precisionTrackBar.Minimum = 1;
 			precisionTrackBar.Name = "precisionTrackBar";
 			precisionTrackBar.Size = new Size(130, 56);
@@ -295,8 +298,8 @@
 			// kdTrackbar
 			// 
 			kdTrackbar.Location = new Point(3, 532);
-			kdTrackbar.Maximum = 9;
-			kdTrackbar.Minimum = 1;
+			kdTrackbar.Maximum = 10;
+			kdTrackbar.Minimum = 0;
 			kdTrackbar.Name = "kdTrackbar";
 			kdTrackbar.Size = new Size(130, 56);
 			kdTrackbar.TabIndex = 18;
@@ -376,6 +379,18 @@
 			animationButton.UseVisualStyleBackColor = true;
 			animationButton.Click += animationButton_Click;
 			// 
+			// speedTrackbar
+			// 
+			speedTrackbar.Location = new Point(3, 875);
+			speedTrackbar.Maximum = 100;
+			speedTrackbar.Minimum = 1;
+			speedTrackbar.Name = "speedTrackbar";
+			speedTrackbar.Size = new Size(130, 56);
+			speedTrackbar.TabIndex = 34;
+			speedTrackbar.TickStyle = TickStyle.None;
+			speedTrackbar.Value = 50;
+			speedTrackbar.Scroll += speedTrackbar_Scroll;
+			// 
 			// Form1
 			// 
 			AutoScaleDimensions = new SizeF(8F, 20F);
@@ -401,6 +416,7 @@
 			((System.ComponentModel.ISupportInitialize)ksTrackbar).EndInit();
 			((System.ComponentModel.ISupportInitialize)mTrackbar).EndInit();
 			((System.ComponentModel.ISupportInitialize)zLightTrackbar).EndInit();
+			((System.ComponentModel.ISupportInitialize)speedTrackbar).EndInit();
 			ResumeLayout(false);
 		}
 
@@ -432,5 +448,6 @@
 		private Button animationButton;
 		private CheckBox normalmapCheckbox;
 		private CheckBox fillingCheckbox;
+		private TrackBar speedTrackbar;
 	}
 }

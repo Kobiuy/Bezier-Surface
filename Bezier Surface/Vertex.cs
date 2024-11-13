@@ -5,25 +5,22 @@ namespace Bezier_Surface
 	public class Vertex
 	{
 		public bool reseted { get; set; }
-		public Vector3 pointBR;
-		public Vector3 puBR;
-		public Vector3 pvBR;
-		public Vector3 normalBR;
-		public Vector3 normalAR;
-		public Vector3 normalUsingNormalMap;
-		public Vector3 pvAR;
-		public Vector3 puAR;
-		public Vector3 pointAR;
-		public Vector3 normalMapN;
-		public Color textureColor;
+		public Vector3 pointBR { get; set; }
+		public Vector3 puBR { get; set; }
+		public Vector3 pvBR { get; set; }
+		public Vector3 normalBR { get; set; }
+		public Vector3 normalAR { get; set; }
+		public Vector3 pvAR { get; set; }
+		public Vector3 puAR { get; set; }
+		public Vector3 pointAR { get; set; }
 		public float u;
 		public float v;
 		public Vertex(Vector3 point, float u, float v, Vector3 pu, Vector3 pv)
 		{
 			this.pointBR = point;
-			puBR = pu;
-			pvBR = pv;
-			normalBR = Vector3.Cross(puBR, pvBR);
+			puBR = Vector3.Normalize(pu);
+			pvBR = Vector3.Normalize(pv);
+			normalBR = Vector3.Normalize(Vector3.Cross(puBR, pvBR));
 			this.u = u;
 			this.v = v;
 		}
@@ -43,9 +40,7 @@ namespace Bezier_Surface
 				puAR = Vector3.Normalize(puAR);
 				pvAR = Vector3.Normalize(pvAR);
 				normalAR = Vector3.Normalize(Vector3.Cross(puAR, pvAR));
-				//ModifyNormal();
 				reseted = true;
-				//normalUsingNormalMap = Vector3.Normalize(normalUsingNormalMap);
 			}
 		}
 
@@ -75,24 +70,6 @@ namespace Bezier_Surface
 			return new Matrix4x4(v.X, 0, 0, 0, v.Y, 0, 0, 0, v.Z, 0, 0, 0, 0, 0, 0, 0);
 		}
 
-		internal void SetNormalVectors(Bitmap noramlmap)
-		{
-			int x = (int)(v * (noramlmap.Width - 1));
-			int y = (int)(u * (noramlmap.Height - 1));
-			Color color = noramlmap.GetPixel(x, y);
-			var X = (color.R / 127.5f) - 1;
-			var Y = (color.G / 127.5f) - 1;
-			var Z = (color.B / 127.5f) - 1;
-			normalMapN = Vector3.Normalize(new Vector3(X, Y, Z));
-		}
-		private void ModifyNormal()
-		{
-			normalUsingNormalMap = new Vector3(
-				puAR.X * normalMapN.X + pvAR.X * normalMapN.Y + normalAR.X * normalMapN.Z,
-				puAR.Y * normalMapN.X + pvAR.Y * normalMapN.Y + normalAR.Y * normalMapN.Z,
-				puAR.Z * normalMapN.X + pvAR.Z * normalMapN.Y + normalAR.Z * normalMapN.Z
-			);
-		}
 		public static Vector3 CreateNormalUsingNormalMap(Vector3 puAR, Vector3 pvAR, Vector3 normalAR, Vector3 normalMapN)
 		{
 			return new Vector3(
@@ -105,13 +82,6 @@ namespace Bezier_Surface
 		internal void Reset()
 		{
 			reseted = false;
-		}
-
-		internal void SetColorFromTexture(Bitmap texture)
-		{
-			int x = (int)(v * (texture.Width - 1));
-			int y = (int)(u * (texture.Height - 1));
-			textureColor = texture.GetPixel(x, y);
 		}
 	}
 }

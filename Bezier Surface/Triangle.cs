@@ -44,10 +44,12 @@ namespace Bezier_Surface
 		}
 		public void UpdateEdgeList()
 		{
-			edges = new List<Edge>();
-			edges.Add(new Edge(vertices[0], vertices[1]));
-			edges.Add(new Edge(vertices[2], vertices[1]));
-			edges.Add(new Edge(vertices[0], vertices[2]));
+			edges =
+			[
+				new Edge(vertices[0], vertices[1]),
+				new Edge(vertices[2], vertices[1]),
+				new Edge(vertices[0], vertices[2]),
+			];
 		}
 		public void FillTriangle(Blueprint blueprint, FastBitmap fbtmp)
 		{
@@ -56,7 +58,7 @@ namespace Bezier_Surface
 
 			Edge? first = null;
 			var AET = new List<Edge>();
-			Dictionary<int, List<Edge>> ET = new Dictionary<int, List<Edge>>();
+			var ET = new Dictionary<int, List<Edge>>();
 
 			UpdateEdgeList();
 
@@ -160,12 +162,6 @@ namespace Bezier_Surface
 			var v1N = v1.normalAR;
 			var v2N = v2.normalAR;
 			var v3N = v3.normalAR;
-			//if (bp.useNormalMap)
-			//{
-			//	v1N = v1.normalUsingNormalMap;
-			//	v2N = v2.normalUsingNormalMap;
-			//	v3N = v3.normalUsingNormalMap;
-			//}
 			float denominator = (v1.pointAR.Y - v3.pointAR.Y) * (v2.pointAR.X - v3.pointAR.X)
 							  + (v3.pointAR.X - v1.pointAR.X) * (v2.pointAR.Y - v3.pointAR.Y);
 
@@ -188,33 +184,23 @@ namespace Bezier_Surface
 			}
 			interpolatedNormal = Vector3.Normalize(interpolatedNormal);
 			float interpolatedZ = a * v1.pointAR.Z + b * v2.pointAR.Z + c * v3.pointAR.Z;
-			//Color color; = Color.FromArgb(255,
-			//	(int)Math.Clamp((a * vertices[0].textureColor.R + b * vertices[1].textureColor.R + c * vertices[2].textureColor.R), 0, 255),
-			//	(int)Math.Clamp((a * vertices[0].textureColor.G + b * vertices[1].textureColor.G + c * vertices[2].textureColor.G), 0, 255),
-			//	(int)Math.Clamp((a * vertices[0].textureColor.B + b * vertices[1].textureColor.B + c * vertices[2].textureColor.B), 0, 255));
 			Color color = bp.survaceColor;
 			if (bp.useNormalMap || bp.useTexture)
 			{
 				(float u, float v) = (Math.Clamp(a * v1.u + b * v2.u + c * v3.u, 0, 1), Math.Clamp(a * v1.v + b * v2.v + c * v3.v, 0, 1));
 				if (bp.useTexture)
 				{
-					int x = (int)(v * (bp.texture.Width - 1));
-					int y = (int)(u * (bp.texture.Height - 1));
-					using (var fbtmp = bp.texture.FastLock())
-					{
-						color = fbtmp.GetPixel(x, y);
-					}
+					int x = (int)(v * (bp.textureColors.GetLength(0) - 1));
+					int y = (int)(u * (bp.textureColors.GetLength(1) - 1));
+					color = bp.textureColors[x, y];
 				}
 				if (bp.useNormalMap)
 				{
-					int x = (int)(v * (bp.normalMap.Width - 1));
-					int y = (int)(u * (bp.normalMap.Height - 1));
-					(var pu, var pv) = (a * v1.puAR + b * v2.puAR + c * v3.puAR, a * v1.pvAR + b * v2.pvAR + c * v3.pvAR);
-					Color nmpc; 
-					using (var fbtmp = bp.normalMap.FastLock())
-					{
-						nmpc = fbtmp.GetPixel(x, y);
-					}
+					int x = (int)(v * (bp.normalMapColors.GetLength(0) - 1));
+					int y = (int)(u * (bp.normalMapColors.GetLength(1) - 1));
+					(var pu, var pv) = (Vector3.Normalize(a * v1.puAR + b * v2.puAR + c * v3.puAR), Vector3.Normalize(a * v1.pvAR + b * v2.pvAR + c * v3.pvAR));
+					Color nmpc;
+					nmpc = bp.normalMapColors[x, y];
 					var X = (nmpc.R / 127.5f) - 1;
 					var Y = (nmpc.G / 127.5f) - 1;
 					var Z = (nmpc.B / 127.5f) - 1;

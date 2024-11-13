@@ -1,15 +1,18 @@
 ﻿using FastBitmapLib;
 using System.Numerics;
+using System.Runtime.ConstrainedExecution;
 
 namespace Bezier_Surface
 {
 	internal class Blueprint
 	{
-		public string controlPointsFilePath = "punkty1.txt";
+		public string controlPointsFilePath = "ControlPoints/punkty2.txt";
 		public string normalMapFilePatch;
 		public string textureFilePatch;
 		public Bitmap normalMap { get; set; }
 		public Bitmap texture { get; set; }
+		public Color[,] textureColors { get; set; }
+		public Color[,] normalMapColors { get; set; }
 		public Color lightColor = Color.White;
 		public bool showControlPoints = true;
 		public bool showMesh { get; set; } = true;
@@ -44,11 +47,27 @@ namespace Bezier_Surface
 		{
 			normalMap = new Bitmap(new Bitmap(normalMapFilePatch));
 			useNormalMap = true;
+			normalMapColors = new Color[normalMap.Width, normalMap.Height];
+			for (int i = 0; i < normalMap.Width; i++)
+			{
+				for (int j = 0; j < normalMap.Height; j++)
+				{
+					normalMapColors[i, j] = normalMap.GetPixel(i, j);
+				}
+			}
 			CreateTriangularMesh();
 		}
 		public void LoadTexture()
 		{
 			texture = new Bitmap(new Bitmap(textureFilePatch));
+			textureColors = new Color[texture.Width, texture.Height];
+			for (int i = 0; i < texture.Width; i++)
+			{
+				for (int j = 0; j < texture.Height; j++)
+				{
+					textureColors[i, j] = texture.GetPixel(i, j);
+				}
+			}
 			CreateTriangularMesh();
 		}
 
@@ -98,10 +117,9 @@ namespace Bezier_Surface
 		}
 		public void Draw()
 		{
-			var btmp = bitmap;
-			using (var g = Graphics.FromImage(btmp))
+			using (var g = Graphics.FromImage(bitmap))
 			{
-				using (var fbtmp = btmp.FastLock())
+				using (var fbtmp = bitmap.FastLock())
 				{
 					fbtmp.Clear(Color.White);
 				}
@@ -115,12 +133,12 @@ namespace Bezier_Surface
 				}
 				if (showFilling)
 				{
-					using (var fbtmp = btmp.FastLock())
+					using (var fbtmp = bitmap.FastLock())
 					{
-						foreach (Triangle triangle in triangularMesh)
+						Parallel.ForEach<Triangle>(triangularMesh, (Triangle triangle) =>
 						{
 							triangle.FillTriangle(this, fbtmp);
-						}
+						});
 					}
 				}
 				if (showMesh)
@@ -180,18 +198,6 @@ namespace Bezier_Surface
 		public void CreateTriangularMesh()
 		{
 			var vertices = SubDivideCPs();
-			foreach (var vertex in vertices)
-			{
-				if (useNormalMap)
-				{
-					vertex.SetNormalVectors(normalMap);
-				}
-				if (useTexture)
-				{
-					vertex.SetColorFromTexture(texture);
-				}
-			}
-
 			triangularMesh = new List<Triangle>();
 			for (int c = 0; c < precision; ++c)
 			{
