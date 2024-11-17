@@ -36,7 +36,7 @@ namespace Bezier_Surface
 			if (!reseted)
 			{
 				RotateZ(MZ);
-				RotateX(MX); // TODO Sortuj po z
+				RotateX(MX); 
 				puAR = Vector3.Normalize(puAR);
 				pvAR = Vector3.Normalize(pvAR);
 				normalAR = Vector3.Normalize(Vector3.Cross(puAR, pvAR));

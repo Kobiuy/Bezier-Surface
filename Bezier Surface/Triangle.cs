@@ -21,9 +21,9 @@ namespace Bezier_Surface
 			DrawLineBetweenVertices(vertices[0], vertices[1], g);
 			DrawLineBetweenVertices(vertices[0], vertices[2], g);
 			DrawLineBetweenVertices(vertices[1], vertices[2], g);
-			g.DrawEllipse(new Pen(Color.DarkBlue, 1), vertices[0].pointAR.X - 1.5f, vertices[0].pointAR.Y - 1.5f, 3, 3);
-			g.DrawEllipse(new Pen(Color.DarkBlue, 1), vertices[1].pointAR.X - 1.5f, vertices[1].pointAR.Y - 1.5f, 3, 3);
-			g.DrawEllipse(new Pen(Color.DarkBlue, 1), vertices[2].pointAR.X - 1.5f, vertices[2].pointAR.Y - 1.5f, 3, 3);
+			g.DrawEllipse(new Pen(Color.DarkBlue, 2), vertices[0].pointAR.X - 1.5f, vertices[0].pointAR.Y - 1.5f, 3, 3);
+			g.DrawEllipse(new Pen(Color.DarkBlue, 2), vertices[1].pointAR.X - 1.5f, vertices[1].pointAR.Y - 1.5f, 3, 3);
+			g.DrawEllipse(new Pen(Color.DarkBlue, 2), vertices[2].pointAR.X - 1.5f, vertices[2].pointAR.Y - 1.5f, 3, 3);
 		}
 		private void DrawLineBetweenVertices(Vertex v1, Vertex v2, Graphics g)
 		{
@@ -113,7 +113,6 @@ namespace Bezier_Surface
 						if (X >= 0 && Y >= 0 && X < fbtmp.Width && Y < fbtmp.Height)
 							fbtmp.SetPixel(X, Y, color);
 					}
-					// TODO Temporary While Stripes Solution
 					if ((int)edge.yMax != (int)edge.next.yMin && (int)edge.yMin != (int)edge.next.yMax)
 						status = status == FillingStage.Inside ? FillingStage.Outside : FillingStage.Inside;
 				}

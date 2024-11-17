@@ -3,12 +3,12 @@ namespace Bezier_Surface
 	internal partial class Form1 : Form
 	{
 		Blueprint blueprint;
-		Animator animator;
+		Animator animator; // TODO generacja mapy wektorów normalnych, kilka Ÿróde³ œwiat³a
 		public Form1()
 		{
 			InitializeComponent();
 			blueprint = new Blueprint(Canvas.Width, Canvas.Height, Canvas);
-			blueprint.Canvas = Canvas;
+			blueprint.canvas = Canvas;
 			Canvas.Image = blueprint.bitmap;
 			animator = new Animator(blueprint, this);
 			animator.ChangeState();
@@ -69,6 +69,7 @@ namespace Bezier_Surface
 				blueprint.lightColor = colorDialog.Color;
 				lightColorButton.BackColor = colorDialog.Color;
 			}
+			blueprint.DrawAndRefresh();
 		}
 
 		private void kdTrackbar_Scroll(object sender, EventArgs e)
@@ -113,26 +114,11 @@ namespace Bezier_Surface
 
 		private void textureButton_CheckedChanged(object sender, EventArgs e)
 		{
-			if (textureButton.Checked)
+			lock (Blueprint.lockObject)
 			{
-				var ofd = new OpenFileDialog();
-				ofd.Filter = "Image Files(*.BMP;*.JPG;*.GIF;*.PNG)|*.BMP;*.JPG;*.GIF;*.PNG";
-				ofd.Title = "Select texture file";
-				ofd.InitialDirectory = Application.StartupPath + "Textures\\";
-				if (ofd.ShowDialog() != DialogResult.OK)
-				{
-					textureButton.Checked = false;
-					return;
-				}
-				blueprint.textureFilePatch = ofd.FileName;
-
-				blueprint.LoadTexture();
-
-				blueprint.useTexture = true;
-			}
-			else
-			{
-				blueprint.useTexture = false;
+				blueprint.useTexture = textureButton.Checked;
+				if (blueprint.useTexture)
+					blueprint.CreateTriangularMesh();
 			}
 			blueprint.Rotate();
 			blueprint.DrawAndRefresh();
@@ -143,26 +129,11 @@ namespace Bezier_Surface
 		{
 			lock (Blueprint.lockObject)
 			{
-				if (normalmapCheckbox.Checked)
-				{
-					var ofd = new OpenFileDialog();
-					ofd.Filter = "Image Files(*.BMP;*.JPG;*.GIF;*.PNG)|*.BMP;*.JPG;*.GIF;*.PNG";
-					ofd.Title = "Select normal map file";
-					ofd.InitialDirectory = Application.StartupPath + "NormalMaps\\";
-					if (ofd.ShowDialog() != DialogResult.OK)
-					{
-						normalmapCheckbox.Checked = false;
-						return;
-					}
-					blueprint.normalMapFilePatch = ofd.FileName;
-					blueprint.LoadMap();
-				}
-				else
-				{
-					blueprint.useNormalMap = false;
-				}
-				blueprint.Rotate();
+				blueprint.useNormalMap = normalmapCheckbox.Checked;
+				if (blueprint.useTexture)
+					blueprint.CreateTriangularMesh();
 			}
+			blueprint.Rotate();
 			blueprint.DrawAndRefresh();
 		}
 
@@ -174,7 +145,33 @@ namespace Bezier_Surface
 
 		private void speedTrackbar_Scroll(object sender, EventArgs e)
 		{
-			animator.speed = speedTrackbar.Value;	
+			animator.speed = speedTrackbar.Value;
+		}
+
+		private void changeTextureButton_Click(object sender, EventArgs e)
+		{
+			var ofd = new OpenFileDialog();
+			ofd.Filter = "Image Files(*.BMP;*.JPG;*.GIF;*.PNG)|*.BMP;*.JPG;*.GIF;*.PNG";
+			ofd.Title = "Select texture file";
+			ofd.InitialDirectory = Application.StartupPath + "Textures\\";
+			if (ofd.ShowDialog() == DialogResult.OK)
+			{
+				blueprint.textureFilePatch = ofd.FileName;
+				blueprint.LoadTexture();
+			}
+		}
+
+		private void changeNormalMapButton_Click(object sender, EventArgs e)
+		{
+			var ofd = new OpenFileDialog();
+			ofd.Filter = "Image Files(*.BMP;*.JPG;*.GIF;*.PNG)|*.BMP;*.JPG;*.GIF;*.PNG";
+			ofd.Title = "Select normal map file";
+			ofd.InitialDirectory = Application.StartupPath + "NormalMaps\\";
+			if (ofd.ShowDialog() == DialogResult.OK)
+			{
+				blueprint.normalMapFilePatch = ofd.FileName;
+				blueprint.LoadMap();
+			}
 		}
 	}
 }

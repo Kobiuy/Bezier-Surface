@@ -6,9 +6,9 @@ namespace Bezier_Surface
 {
 	internal class Blueprint
 	{
-		public string controlPointsFilePath = "ControlPoints/punkty2.txt";
-		public string normalMapFilePatch;
-		public string textureFilePatch;
+		public string controlPointsFilePath = "ControlPoints/punkty3.txt";
+		public string normalMapFilePatch = "NormalMaps\\172_norm.JPG";
+		public string textureFilePatch = "Textures\\172.JPG";
 		public Bitmap normalMap { get; set; }
 		public Bitmap texture { get; set; }
 		public Color[,] textureColors { get; set; }
@@ -20,7 +20,7 @@ namespace Bezier_Surface
 		public static readonly object lockObject = new object();
 		public bool useNormalMap { get; set; }
 		public Bitmap bitmap { get; set; }
-		public PictureBox Canvas { get; set; }
+		public PictureBox canvas { get; set; }
 		public int m { get; set; } = 10;
 		public float ks { get; set; } = 0.2f;
 		public float kd { get; set; } = 0.8f;
@@ -36,45 +36,50 @@ namespace Bezier_Surface
 		public Blueprint(int width, int height, PictureBox Canvas)
 		{
 			bitmap = new Bitmap(width, height);
-			this.Canvas = Canvas;
+			this.canvas = Canvas;
 			LoadPoints();
 			CreateTriangularMesh();
 			Rotate();
+			LoadTexture();
+			LoadMap();
 			DrawAndRefresh();
 		}
 
 		public void LoadMap()
 		{
-			normalMap = new Bitmap(new Bitmap(normalMapFilePatch));
-			useNormalMap = true;
-			normalMapColors = new Color[normalMap.Width, normalMap.Height];
-			for (int i = 0; i < normalMap.Width; i++)
+			lock (lockObject)
 			{
-				for (int j = 0; j < normalMap.Height; j++)
+				normalMap = new Bitmap(new Bitmap(normalMapFilePatch));
+				normalMapColors = new Color[normalMap.Width, normalMap.Height];
+				for (int i = 0; i < normalMap.Width; i++)
 				{
-					normalMapColors[i, j] = normalMap.GetPixel(i, j);
+					for (int j = 0; j < normalMap.Height; j++)
+					{
+						normalMapColors[i, j] = normalMap.GetPixel(i, j);
+					}
 				}
 			}
-			CreateTriangularMesh();
 		}
 		public void LoadTexture()
 		{
-			texture = new Bitmap(new Bitmap(textureFilePatch));
-			textureColors = new Color[texture.Width, texture.Height];
-			for (int i = 0; i < texture.Width; i++)
+			lock (lockObject)
 			{
-				for (int j = 0; j < texture.Height; j++)
+				texture = new Bitmap(new Bitmap(textureFilePatch));
+				textureColors = new Color[texture.Width, texture.Height];
+				for (int i = 0; i < texture.Width; i++)
 				{
-					textureColors[i, j] = texture.GetPixel(i, j);
+					for (int j = 0; j < texture.Height; j++)
+					{
+						textureColors[i, j] = texture.GetPixel(i, j);
+					}
 				}
 			}
-			CreateTriangularMesh();
 		}
 
 		public void SetOriginInCenter(Graphics g)
 		{
 			g.ScaleTransform(1, -1);
-			g.TranslateTransform(Canvas.Width / 2, -Canvas.Height / 2);
+			g.TranslateTransform(canvas.Width / 2, -canvas.Height / 2);
 
 		}
 		public void LoadPoints()
@@ -98,14 +103,14 @@ namespace Bezier_Surface
 			lock (lockObject)
 			{
 				Draw();
-				Canvas.Refresh();
+				canvas.Refresh();
 			}
 		}
 		public void Refresh()
 		{
 			lock (lockObject)
 			{
-				Canvas.Refresh();
+				canvas.Refresh();
 			}
 		}
 		public void AnimatorDraw()
@@ -126,9 +131,17 @@ namespace Bezier_Surface
 				SetOriginInCenter(g);
 				if (showControlPoints)
 				{
-					foreach (var vertex in CPs)
+					for (int i = 0; i < 4; i++)
 					{
-						g.DrawEllipse(new Pen(Color.RebeccaPurple, 10), vertex.pointAR.X - 5, vertex.pointAR.Y - 5, 10, 10);
+						for (int j = 0; j < 4; j++)
+						{
+							g.DrawEllipse(new Pen(Color.RebeccaPurple, 10), CPs[4 * i + j].pointAR.X - 5, CPs[4 * i + j].pointAR.Y - 5, 10, 10);
+							if (i < 3)
+							{
+								g.DrawLine(new Pen(Color.Black, 2), CPs[4 * i + j].pointAR.X, CPs[4 * i + j].pointAR.Y, CPs[4 * (i + 1) + j].pointAR.X, CPs[4 * (i + 1) + j].pointAR.Y);
+								g.DrawLine(new Pen(Color.Black, 2), CPs[4 * j + i].pointAR.X, CPs[4 * j + i].pointAR.Y, CPs[4 * j + i + 1].pointAR.X, CPs[4 * j + i + 1].pointAR.Y);
+							}
+						}
 					}
 				}
 				if (showFilling)
@@ -221,11 +234,13 @@ namespace Bezier_Surface
 			{
 				triangle.Rotate(MX, MZ);
 			}
+
 			foreach (var cp in CPs)
 			{
 				cp.reseted = false;
 				cp.Rotate(MX, MZ);
 			}
+
 		}
 	}
 }
