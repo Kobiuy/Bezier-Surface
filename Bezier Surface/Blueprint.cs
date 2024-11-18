@@ -7,8 +7,8 @@ namespace Bezier_Surface
 	internal class Blueprint
 	{
 		public string controlPointsFilePath = "ControlPoints/punkty3.txt";
-		public string normalMapFilePatch = "NormalMaps\\172_norm.JPG";
-		public string textureFilePatch = "Textures\\172.JPG";
+		public string normalMapFilePatch = "NormalMaps\\bricks.JPG";
+		public string textureFilePatch = "Textures\\bricks.JPG";
 		public Bitmap normalMap { get; set; }
 		public Bitmap texture { get; set; }
 		public Color[,] textureColors { get; set; }

@@ -51,7 +51,7 @@ namespace Bezier_Surface
             {
                 blueprint.lightPosition.X = radius * (float)MathF.Cos(angle);
                 blueprint.lightPosition.Y = radius * (float)MathF.Sin(angle);
-                angle += 0.0036f * (speed - speed/800f*speedDelay);
+                angle += 0.0036f * (speed - speed/300f*speedDelay);
                 blueprint.AnimatorDraw();
                 form.BeginInvoke(blueprint.Refresh);
                 Thread.Sleep(25);
@@ -65,7 +65,7 @@ namespace Bezier_Surface
                     radius++;
                     speedDelay++;
                 }
-                if (radius == 0 || radius == 800)
+                if (radius == 0 || radius == 300)
                 {
                     goBack = !goBack;
                 }
