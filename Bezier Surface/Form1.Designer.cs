@@ -60,6 +60,11 @@
 			label1 = new Label();
 			speedTrackbar = new TrackBar();
 			lightPositionCheckbox = new CheckBox();
+			groupBox2 = new GroupBox();
+			standardLighButton = new RadioButton();
+			reflectorRadiobutton = new RadioButton();
+			mlLabel = new Label();
+			mlTrackbar = new TrackBar();
 			tableLayoutPanel1.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)Canvas).BeginInit();
 			flowLayoutPanel1.SuspendLayout();
@@ -73,6 +78,8 @@
 			((System.ComponentModel.ISupportInitialize)mTrackbar).BeginInit();
 			((System.ComponentModel.ISupportInitialize)zLightTrackbar).BeginInit();
 			((System.ComponentModel.ISupportInitialize)speedTrackbar).BeginInit();
+			groupBox2.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)mlTrackbar).BeginInit();
 			SuspendLayout();
 			// 
 			// tableLayoutPanel1
@@ -229,7 +236,7 @@
 			// 
 			lightColorButton.Location = new Point(3, 335);
 			lightColorButton.Name = "lightColorButton";
-			lightColorButton.Size = new Size(94, 29);
+			lightColorButton.Size = new Size(163, 29);
 			lightColorButton.TabIndex = 12;
 			lightColorButton.Text = "Set Light Color";
 			lightColorButton.UseVisualStyleBackColor = true;
@@ -315,6 +322,9 @@
 			flowLayoutPanel2.Controls.Add(label1);
 			flowLayoutPanel2.Controls.Add(speedTrackbar);
 			flowLayoutPanel2.Controls.Add(lightPositionCheckbox);
+			flowLayoutPanel2.Controls.Add(groupBox2);
+			flowLayoutPanel2.Controls.Add(mlLabel);
+			flowLayoutPanel2.Controls.Add(mlTrackbar);
 			flowLayoutPanel2.Dock = DockStyle.Fill;
 			flowLayoutPanel2.FlowDirection = FlowDirection.TopDown;
 			flowLayoutPanel2.Location = new Point(1335, 3);
@@ -407,7 +417,7 @@
 			animationButton.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
 			animationButton.Location = new Point(3, 331);
 			animationButton.Name = "animationButton";
-			animationButton.Size = new Size(160, 29);
+			animationButton.Size = new Size(250, 29);
 			animationButton.TabIndex = 30;
 			animationButton.Text = "Start Animation";
 			animationButton.UseVisualStyleBackColor = true;
@@ -418,9 +428,9 @@
 			label1.AutoSize = true;
 			label1.Location = new Point(3, 363);
 			label1.Name = "label1";
-			label1.Size = new Size(122, 20);
+			label1.Size = new Size(156, 20);
 			label1.TabIndex = 35;
-			label1.Text = "Animation speed";
+			label1.Text = "Animation light speed";
 			// 
 			// speedTrackbar
 			// 
@@ -444,6 +454,61 @@
 			lightPositionCheckbox.Text = "Show Light Position";
 			lightPositionCheckbox.UseVisualStyleBackColor = true;
 			lightPositionCheckbox.CheckedChanged += lightPositionCheckbox_CheckedChanged;
+			// 
+			// groupBox2
+			// 
+			groupBox2.Controls.Add(standardLighButton);
+			groupBox2.Controls.Add(reflectorRadiobutton);
+			groupBox2.Location = new Point(3, 478);
+			groupBox2.Name = "groupBox2";
+			groupBox2.Size = new Size(250, 125);
+			groupBox2.TabIndex = 37;
+			groupBox2.TabStop = false;
+			groupBox2.Text = "Light";
+			// 
+			// standardLighButton
+			// 
+			standardLighButton.AutoSize = true;
+			standardLighButton.Checked = true;
+			standardLighButton.Location = new Point(5, 56);
+			standardLighButton.Name = "standardLighButton";
+			standardLighButton.Size = new Size(90, 24);
+			standardLighButton.TabIndex = 1;
+			standardLighButton.TabStop = true;
+			standardLighButton.Text = "Standard";
+			standardLighButton.UseVisualStyleBackColor = true;
+			standardLighButton.CheckedChanged += standardLighButton_CheckedChanged;
+			// 
+			// reflectorRadiobutton
+			// 
+			reflectorRadiobutton.AutoSize = true;
+			reflectorRadiobutton.Location = new Point(6, 26);
+			reflectorRadiobutton.Name = "reflectorRadiobutton";
+			reflectorRadiobutton.Size = new Size(90, 24);
+			reflectorRadiobutton.TabIndex = 0;
+			reflectorRadiobutton.Text = "Reflektor";
+			reflectorRadiobutton.UseVisualStyleBackColor = true;
+			reflectorRadiobutton.CheckedChanged += reflectorRadiobutton_CheckedChanged;
+			// 
+			// mlLabel
+			// 
+			mlLabel.AutoSize = true;
+			mlLabel.Location = new Point(3, 606);
+			mlLabel.Name = "mlLabel";
+			mlLabel.Size = new Size(84, 20);
+			mlLabel.TabIndex = 38;
+			mlLabel.Text = "ML Value: 5";
+			// 
+			// mlTrackbar
+			// 
+			mlTrackbar.Location = new Point(3, 629);
+			mlTrackbar.Maximum = 40;
+			mlTrackbar.Minimum = 5;
+			mlTrackbar.Name = "mlTrackbar";
+			mlTrackbar.Size = new Size(130, 56);
+			mlTrackbar.TabIndex = 2;
+			mlTrackbar.Value = 5;
+			mlTrackbar.Scroll += mlTrackbar_Scroll;
 			// 
 			// Form1
 			// 
@@ -470,6 +535,9 @@
 			((System.ComponentModel.ISupportInitialize)mTrackbar).EndInit();
 			((System.ComponentModel.ISupportInitialize)zLightTrackbar).EndInit();
 			((System.ComponentModel.ISupportInitialize)speedTrackbar).EndInit();
+			groupBox2.ResumeLayout(false);
+			groupBox2.PerformLayout();
+			((System.ComponentModel.ISupportInitialize)mlTrackbar).EndInit();
 			ResumeLayout(false);
 		}
 
@@ -507,5 +575,10 @@
 		private FlowLayoutPanel flowLayoutPanel2;
 		private Label label1;
 		private CheckBox lightPositionCheckbox;
+		private GroupBox groupBox2;
+		private RadioButton standardLighButton;
+		private RadioButton reflectorRadiobutton;
+		private TrackBar mlTrackbar;
+		private Label mlLabel;
 	}
 }

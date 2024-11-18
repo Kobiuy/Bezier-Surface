@@ -180,5 +180,24 @@ namespace Bezier_Surface
 			blueprint.showLightPosition = lightPositionCheckbox.Checked;
 			blueprint.DrawAndRefresh();
 		}
+
+		private void standardLighButton_CheckedChanged(object sender, EventArgs e)
+		{
+			blueprint.useReflector = reflectorRadiobutton.Checked;
+			blueprint.DrawAndRefresh();
+		}
+
+		private void reflectorRadiobutton_CheckedChanged(object sender, EventArgs e)
+		{
+			blueprint.useReflector = reflectorRadiobutton.Checked;
+			blueprint.DrawAndRefresh();
+		}
+
+		private void mlTrackbar_Scroll(object sender, EventArgs e)
+		{
+			blueprint.mL = mlTrackbar.Value;
+			mlLabel.Text = "mL value: " + mlTrackbar.Value.ToString();
+			blueprint.DrawAndRefresh();
+		}
 	}
 }

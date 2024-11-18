@@ -141,18 +141,24 @@ namespace Bezier_Surface
 			{
 				color = bp.survaceColor;
 			}
-			var ioil = (new Vector3(bp.lightColor.R, bp.lightColor.G, bp.lightColor.B) / 255f) *
-			(new Vector3(color.R, color.G, color.B) / 255f);
+			var io = new Vector3(bp.lightColor.R, bp.lightColor.G, bp.lightColor.B) / 255f;
+			var il = new Vector3(color.R, color.G, color.B) / 255f;
 
 			Vector3 L = Vector3.Normalize(bp.lightPosition - new Vector3(point, z));
+			if (bp.useReflector)
+			{
+				il = il * (float)Math.Pow(Vector3.Dot(L, Vector3.Normalize(bp.lightPosition)), bp.mL);
+			}
+			var ioil = (io) * ((il));
+
 			var NL = Vector3.Dot(normal, L);
 			Vector3 R = 2 * NL * normal - L;
 			var V = new Vector3(0, 0, 1);
 			var colorResult = (bp.kd * ioil * Math.Clamp(NL, 0, 1) + bp.ks * ioil * (float)Math.Pow(Math.Clamp(Vector3.Dot(V, R), 0, 1), bp.m));
 
-			int r = (int)Math.Clamp(Math.Round(colorResult.X * 255), 0, 255);
-			int g = (int)Math.Clamp(Math.Round(colorResult.Y * 255), 0, 255);
-			int b = (int)Math.Clamp(Math.Round(colorResult.Z * 255), 0, 255);
+			int r = Math.Clamp((int)Math.Round(colorResult.X * 255), 0, 255);
+			int g = Math.Clamp((int)Math.Round(colorResult.Y * 255), 0, 255);
+			int b = Math.Clamp((int)Math.Round(colorResult.Z * 255), 0, 255);
 			return Color.FromArgb(255, r, g, b);
 		}
 

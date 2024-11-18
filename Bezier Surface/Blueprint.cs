@@ -6,7 +6,7 @@ namespace Bezier_Surface
 {
 	internal class Blueprint
 	{
-		public string controlPointsFilePath = "ControlPoints/punkty3.txt";
+		public string controlPointsFilePath = "ControlPoints/punkty2.txt";
 		public string normalMapFilePatch = "NormalMaps\\bricks.JPG";
 		public string textureFilePatch = "Textures\\bricks.JPG";
 		public Bitmap normalMap { get; set; }
@@ -25,6 +25,8 @@ namespace Bezier_Surface
 		public int m { get; set; } = 10;
 		public float ks { get; set; } = 0.2f;
 		public float kd { get; set; } = 0.8f;
+		public bool useReflector { get; set; }
+		public int mL = 5;
 		public bool useTexture { get; set; }
 		public bool showFilling { get; internal set; } = true;
 
@@ -118,6 +120,8 @@ namespace Bezier_Surface
 		{
 			lock (lockObject)
 			{
+				CreateTriangularMesh();
+				Rotate();
 				Draw();
 			}
 		}
