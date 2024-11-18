@@ -14,6 +14,7 @@ namespace Bezier_Surface
 		public Color[,] textureColors { get; set; }
 		public Color[,] normalMapColors { get; set; }
 		public Color lightColor = Color.White;
+		public bool showLightPosition { get; set; }
 		public bool showControlPoints = true;
 		public bool showMesh { get; set; } = true;
 		public Vector3 lightPosition = new Vector3(0, 0, 500);
@@ -160,6 +161,10 @@ namespace Bezier_Surface
 					{
 						triangle.Draw(g);
 					}
+				}
+				if (showLightPosition)
+				{
+					g.DrawEllipse(new Pen(Color.OrangeRed, 5), (int)lightPosition.X, (int)lightPosition.Y, 5, 5);
 				}
 			}
 		}

@@ -159,6 +159,7 @@ namespace Bezier_Surface
 				blueprint.textureFilePatch = ofd.FileName;
 				blueprint.LoadTexture();
 			}
+			blueprint.DrawAndRefresh();
 		}
 
 		private void changeNormalMapButton_Click(object sender, EventArgs e)
@@ -172,6 +173,12 @@ namespace Bezier_Surface
 				blueprint.normalMapFilePatch = ofd.FileName;
 				blueprint.LoadMap();
 			}
+			blueprint.DrawAndRefresh();
+		}
+		private void lightPositionCheckbox_CheckedChanged(object sender, EventArgs e)
+		{
+			blueprint.showLightPosition = lightPositionCheckbox.Checked;
+			blueprint.DrawAndRefresh();
 		}
 	}
 }
