@@ -121,11 +121,12 @@ namespace Bezier_Surface
 						(Color color, Single z) = CalculateFinalColor(blueprint, new Vector2(i, y));
 						if (X >= 0 && Y >= 0 && X < fbtmp.Width && Y < fbtmp.Height)
 						{
-							if (z > blueprint.zBuffer[X, Y])
-							{
-								fbtmp.SetPixel(X, Y, color);
-								blueprint.zBuffer[X, Y] = z;
-							}
+							lock (blueprint.zBuffer)
+								if (z > blueprint.zBuffer[X, Y])
+								{
+									blueprint.zBuffer[X, Y] = z;
+									fbtmp.SetPixel(X, Y, color);
+								}
 
 						}
 					}
