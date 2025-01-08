@@ -11,6 +11,7 @@ namespace Bezier_Surface
 			blueprint.canvas = Canvas;
 			Canvas.Image = blueprint.bitmap;
 			animator = new Animator(blueprint, this);
+			blueprint.animator = animator;
 			animator.ChangeState();
 		}
 
@@ -55,7 +56,7 @@ namespace Bezier_Surface
 		}
 
 		private void Form1_Resize(object sender, EventArgs e)
-		{ 
+		{
 			if (blueprint != null)
 			{
 				blueprint.bitmap = new Bitmap(Canvas.Width, Canvas.Height);
@@ -200,6 +201,12 @@ namespace Bezier_Surface
 		{
 			blueprint.mL = mlTrackbar.Value;
 			mlLabel.Text = "mL value: " + mlTrackbar.Value.ToString();
+			blueprint.DrawAndRefresh();
+		}
+
+		private void showTriangle_CheckedChanged(object sender, EventArgs e)
+		{
+			blueprint.showTriangle = showTriangle.Checked;
 			blueprint.DrawAndRefresh();
 		}
 	}

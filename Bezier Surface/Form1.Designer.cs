@@ -65,6 +65,7 @@
 			reflectorRadiobutton = new RadioButton();
 			mlLabel = new Label();
 			mlTrackbar = new TrackBar();
+			showTriangle = new CheckBox();
 			tableLayoutPanel1.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)Canvas).BeginInit();
 			flowLayoutPanel1.SuspendLayout();
@@ -113,6 +114,7 @@
 			flowLayoutPanel1.Controls.Add(controlPointsCheckbox);
 			flowLayoutPanel1.Controls.Add(meshCheckBox);
 			flowLayoutPanel1.Controls.Add(fillingCheckbox);
+			flowLayoutPanel1.Controls.Add(showTriangle);
 			flowLayoutPanel1.Controls.Add(alfaLabel);
 			flowLayoutPanel1.Controls.Add(alfaSlider);
 			flowLayoutPanel1.Controls.Add(betaLabel);
@@ -173,7 +175,7 @@
 			// alfaLabel
 			// 
 			alfaLabel.AutoSize = true;
-			alfaLabel.Location = new Point(3, 90);
+			alfaLabel.Location = new Point(3, 120);
 			alfaLabel.Name = "alfaLabel";
 			alfaLabel.Size = new Size(90, 20);
 			alfaLabel.TabIndex = 9;
@@ -181,7 +183,7 @@
 			// 
 			// alfaSlider
 			// 
-			alfaSlider.Location = new Point(3, 113);
+			alfaSlider.Location = new Point(3, 143);
 			alfaSlider.Maximum = 45;
 			alfaSlider.Minimum = -45;
 			alfaSlider.Name = "alfaSlider";
@@ -193,7 +195,7 @@
 			// betaLabel
 			// 
 			betaLabel.AutoSize = true;
-			betaLabel.Location = new Point(3, 172);
+			betaLabel.Location = new Point(3, 202);
 			betaLabel.Name = "betaLabel";
 			betaLabel.RightToLeft = RightToLeft.No;
 			betaLabel.Size = new Size(93, 20);
@@ -202,7 +204,7 @@
 			// 
 			// betaSlider
 			// 
-			betaSlider.Location = new Point(1, 193);
+			betaSlider.Location = new Point(1, 223);
 			betaSlider.Margin = new Padding(1);
 			betaSlider.Maximum = 45;
 			betaSlider.Name = "betaSlider";
@@ -214,7 +216,7 @@
 			// precisionLabel
 			// 
 			precisionLabel.AutoSize = true;
-			precisionLabel.Location = new Point(3, 250);
+			precisionLabel.Location = new Point(3, 280);
 			precisionLabel.Name = "precisionLabel";
 			precisionLabel.Size = new Size(130, 20);
 			precisionLabel.TabIndex = 11;
@@ -222,7 +224,7 @@
 			// 
 			// precisionTrackBar
 			// 
-			precisionTrackBar.Location = new Point(3, 273);
+			precisionTrackBar.Location = new Point(3, 303);
 			precisionTrackBar.Maximum = 100;
 			precisionTrackBar.Minimum = 1;
 			precisionTrackBar.Name = "precisionTrackBar";
@@ -234,7 +236,7 @@
 			// 
 			// lightColorButton
 			// 
-			lightColorButton.Location = new Point(3, 335);
+			lightColorButton.Location = new Point(3, 365);
 			lightColorButton.Name = "lightColorButton";
 			lightColorButton.Size = new Size(163, 29);
 			lightColorButton.TabIndex = 12;
@@ -247,7 +249,7 @@
 			groupBox1.AutoSize = true;
 			groupBox1.Controls.Add(textureButton);
 			groupBox1.Controls.Add(solidColorButton);
-			groupBox1.Location = new Point(3, 370);
+			groupBox1.Location = new Point(3, 400);
 			groupBox1.Name = "groupBox1";
 			groupBox1.Size = new Size(116, 106);
 			groupBox1.TabIndex = 17;
@@ -280,7 +282,7 @@
 			// normalmapCheckbox
 			// 
 			normalmapCheckbox.AutoSize = true;
-			normalmapCheckbox.Location = new Point(3, 482);
+			normalmapCheckbox.Location = new Point(3, 512);
 			normalmapCheckbox.Name = "normalmapCheckbox";
 			normalmapCheckbox.Size = new Size(115, 24);
 			normalmapCheckbox.TabIndex = 32;
@@ -290,7 +292,7 @@
 			// 
 			// changeTextureButton
 			// 
-			changeTextureButton.Location = new Point(3, 512);
+			changeTextureButton.Location = new Point(3, 542);
 			changeTextureButton.Name = "changeTextureButton";
 			changeTextureButton.Size = new Size(163, 29);
 			changeTextureButton.TabIndex = 34;
@@ -300,7 +302,7 @@
 			// 
 			// changeNormalMapButton
 			// 
-			changeNormalMapButton.Location = new Point(3, 547);
+			changeNormalMapButton.Location = new Point(3, 577);
 			changeNormalMapButton.Name = "changeNormalMapButton";
 			changeNormalMapButton.Size = new Size(163, 29);
 			changeNormalMapButton.TabIndex = 35;
@@ -510,6 +512,19 @@
 			mlTrackbar.Value = 5;
 			mlTrackbar.Scroll += mlTrackbar_Scroll;
 			// 
+			// showTriangle
+			// 
+			showTriangle.AutoSize = true;
+			showTriangle.Checked = true;
+			showTriangle.CheckState = CheckState.Checked;
+			showTriangle.Location = new Point(3, 93);
+			showTriangle.Name = "showTriangle";
+			showTriangle.Size = new Size(124, 24);
+			showTriangle.TabIndex = 39;
+			showTriangle.Text = "Show Triangle";
+			showTriangle.UseVisualStyleBackColor = true;
+			showTriangle.CheckedChanged += showTriangle_CheckedChanged;
+			// 
 			// Form1
 			// 
 			AutoScaleDimensions = new SizeF(8F, 20F);
@@ -580,5 +595,6 @@
 		private RadioButton reflectorRadiobutton;
 		private TrackBar mlTrackbar;
 		private Label mlLabel;
+		private CheckBox showTriangle;
 	}
 }

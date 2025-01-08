@@ -1,4 +1,5 @@
 ﻿using FastBitmapLib;
+using System.Drawing;
 using System.Numerics;
 
 namespace Bezier_Surface
@@ -9,12 +10,19 @@ namespace Bezier_Surface
 		public Vertex[] vertices = new Vertex[3];
 		int minY = int.MaxValue;
 		int maxY = int.MinValue;
+		Color myColor;
+		bool inTet;
 		List<Edge> edges;
 		public Triangle(Vertex v1, Vertex v2, Vertex v3)
 		{
 			vertices[0] = v1;
 			vertices[1] = v2;
 			vertices[2] = v3;
+			Random random = new Random();
+			int red = random.Next(100, 256);
+			int green = random.Next(100, 256);
+			int blue = random.Next(100, 256);
+			myColor = Color.FromArgb(red, green, blue);
 		}
 		public void Draw(Graphics g)
 		{
@@ -53,6 +61,7 @@ namespace Bezier_Surface
 		}
 		public void FillTriangle(Blueprint blueprint, FastBitmap fbtmp)
 		{
+			inTet = blueprint.tetTriangles.Contains(this);
 			int wOffset = fbtmp.Width / 2;
 			int hOffset = fbtmp.Height / 2;
 
@@ -109,9 +118,16 @@ namespace Bezier_Surface
 					{
 						X = i + wOffset;
 						Y = -y + hOffset;
-						Color color = CalculateFinalColor(blueprint, new Vector2(i, y));
+						(Color color, Single z) = CalculateFinalColor(blueprint, new Vector2(i, y));
 						if (X >= 0 && Y >= 0 && X < fbtmp.Width && Y < fbtmp.Height)
-							fbtmp.SetPixel(X, Y, color);
+						{
+							if (z > blueprint.zBuffer[X, Y])
+							{
+								fbtmp.SetPixel(X, Y, color);
+								blueprint.zBuffer[X, Y] = z;
+							}
+
+						}
 					}
 					if ((int)edge.yMax != (int)edge.next.yMin && (int)edge.yMin != (int)edge.next.yMax)
 						status = status == FillingStage.Inside ? FillingStage.Outside : FillingStage.Inside;
@@ -134,12 +150,16 @@ namespace Bezier_Surface
 
 			return first;
 		}
-		public Color CalculateFinalColor(Blueprint bp, Vector2 point)
+		public (Color, Single) CalculateFinalColor(Blueprint bp, Vector2 point)
 		{
 			(var normal, var z, var color) = InterpolateNormalAndZ(vertices[0], vertices[1], vertices[2], point, bp);
 			if (!bp.useTexture)
 			{
 				color = bp.survaceColor;
+			}
+			if (inTet)
+			{
+				color = myColor;
 			}
 			var io = new Vector3(bp.lightColor.R, bp.lightColor.G, bp.lightColor.B) / 255f;
 			var il = new Vector3(color.R, color.G, color.B) / 255f;
@@ -159,7 +179,7 @@ namespace Bezier_Surface
 			int r = Math.Clamp((int)Math.Round(colorResult.X * 255), 0, 255);
 			int g = Math.Clamp((int)Math.Round(colorResult.Y * 255), 0, 255);
 			int b = Math.Clamp((int)Math.Round(colorResult.Z * 255), 0, 255);
-			return Color.FromArgb(255, r, g, b);
+			return (Color.FromArgb(255, r, g, b), z);
 		}
 
 		public (Vector3, float, Color) InterpolateNormalAndZ(Vertex v1, Vertex v2, Vertex v3, Vector2 P, Blueprint bp)
@@ -190,7 +210,7 @@ namespace Bezier_Surface
 			interpolatedNormal = Vector3.Normalize(interpolatedNormal);
 			float interpolatedZ = a * v1.pointAR.Z + b * v2.pointAR.Z + c * v3.pointAR.Z;
 			Color color = bp.survaceColor;
-			if (bp.useNormalMap || bp.useTexture)
+			if (!inTet && (bp.useNormalMap || bp.useTexture))
 			{
 				(float u, float v) = (Math.Clamp(a * v1.u + b * v2.u + c * v3.u, 0, 1), Math.Clamp(a * v1.v + b * v2.v + c * v3.v, 0, 1));
 				if (bp.useTexture)
@@ -213,6 +233,7 @@ namespace Bezier_Surface
 					interpolatedNormal = Vector3.Normalize(Vertex.CreateNormalUsingNormalMap(pu, pv, interpolatedNormal, normalMapN));
 				}
 			}
+
 			return (interpolatedNormal, interpolatedZ, color);
 		}
 

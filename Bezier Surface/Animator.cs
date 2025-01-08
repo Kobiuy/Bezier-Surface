@@ -15,9 +15,11 @@ namespace Bezier_Surface
 		private Blueprint blueprint;
 		private Form form;
 		public int speed = 50;
+		public int angle;
 		public bool running { get; private set; }
 		public Animator(Blueprint blueprint, Form form)
 		{
+			angle = 0;
 			this.blueprint = blueprint;
 			ChangeState();
 			this.form = form;
@@ -53,7 +55,7 @@ namespace Bezier_Surface
 				blueprint.lightPosition.X = radius * (float)MathF.Cos(angle);
 				blueprint.lightPosition.Y = radius * (float)MathF.Sin(angle);
 				angle += 0.0036f * (speed - speed / 300f * speedDelay);
-				AnimateControlPoints((offset++)/10f);
+				AnimateControlPoints((offset++) / 10f);
 				blueprint.AnimatorDraw();
 				form.BeginInvoke(blueprint.Refresh);
 				Thread.Sleep(25);
@@ -71,7 +73,7 @@ namespace Bezier_Surface
 				{
 					goBack = !goBack;
 				}
-				if (offset == 360*10)
+				if (offset == 360 * 10)
 				{
 					offset = 0;
 				}
@@ -85,8 +87,13 @@ namespace Bezier_Surface
 				for (int j = 0; j < 4; j++)
 				{
 					var p = blueprint.CPs[i * 4 + j].pointBR;
-					blueprint.CPs[i * 4 + j].pointBR = new Vector3(p.X, p.Y, p.Z + 10*(float)Math.Sin(360 / ((j+i) + 1) + offset));
+					blueprint.CPs[i * 4 + j].pointBR = new Vector3(p.X, p.Y, p.Z + 10 * (float)Math.Sin(360 / ((j + i) + 1) + offset));
 				}
+			}
+			angle++;
+			if (angle > 360)
+			{
+				angle = 0;
 			}
 		}
 	}

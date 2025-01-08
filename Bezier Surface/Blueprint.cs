@@ -9,6 +9,9 @@ namespace Bezier_Surface
 		public string controlPointsFilePath = "ControlPoints/punkty2.txt";
 		public string normalMapFilePatch = "NormalMaps\\bricks.JPG";
 		public string textureFilePatch = "Textures\\bricks.JPG";
+		public List<Vertex> tetrahedron = new List<Vertex>();
+		public List<Triangle> tetTriangles = new List<Triangle>();
+		public bool showTriangle = true;
 		public Bitmap normalMap { get; set; }
 		public Bitmap texture { get; set; }
 		public Color[,] textureColors { get; set; }
@@ -29,6 +32,7 @@ namespace Bezier_Surface
 		public int mL = 5;
 		public bool useTexture { get; set; }
 		public bool showFilling { get; internal set; } = true;
+		public Single[,] zBuffer { get; set; }
 
 		public Vertex[] CPs = new Vertex[16];
 		public List<Triangle> triangularMesh = new List<Triangle>();
@@ -36,16 +40,37 @@ namespace Bezier_Surface
 		public int beta = 0; // x
 		public int precision = 10;
 		public Color survaceColor = Color.DeepPink;
+		internal Animator animator;
+
 		public Blueprint(int width, int height, PictureBox Canvas)
 		{
+			zBuffer = new Single[width, height];
+			for (int i = 0; i < width; i++)
+			{
+				for (int j = 0; j < height; j++)
+				{
+					zBuffer[i, j] = Single.MinValue;
+				}
+			}
 			bitmap = new Bitmap(width, height);
 			this.canvas = Canvas;
+			tetrahedron.Add(new Vertex(-200, -200, -100));
+			tetrahedron.Add(new Vertex(0, 200, -100));
+			tetrahedron.Add(new Vertex(200, -200, -100));
+			tetrahedron.Add(new Vertex(0, 0, 300));
+
+			tetrahedron[0].calcNormal(tetrahedron[1], tetrahedron[2], tetrahedron[3]);
+			tetrahedron[1].calcNormal(tetrahedron[0], tetrahedron[2], tetrahedron[3]);
+			tetrahedron[2].calcNormal(tetrahedron[1], tetrahedron[0], tetrahedron[3]);
+			tetrahedron[3].calcNormal(tetrahedron[1], tetrahedron[0], tetrahedron[2]);
+
 			LoadPoints();
 			CreateTriangularMesh();
 			Rotate();
 			LoadTexture();
 			LoadMap();
 			DrawAndRefresh();
+
 		}
 
 		public void LoadMap()
@@ -127,6 +152,13 @@ namespace Bezier_Surface
 		}
 		public void Draw()
 		{
+			for (int i = 0; i < canvas.Width; i++)
+			{
+				for (int j = 0; j < canvas.Height; j++)
+				{
+					zBuffer[i, j] = Single.MinValue;
+				}
+			}
 			using (var g = Graphics.FromImage(bitmap))
 			{
 				using (var fbtmp = bitmap.FastLock())
@@ -159,12 +191,26 @@ namespace Bezier_Surface
 						});
 					}
 				}
+				if (showTriangle)
+					using (var fbtmp = bitmap.FastLock())
+					{
+						Parallel.ForEach<Triangle>(tetTriangles, (Triangle triangle) =>
+						{
+							triangle.FillTriangle(this, fbtmp);
+						});
+					}
+
 				if (showMesh)
 				{
 					foreach (var triangle in triangularMesh)
 					{
 						triangle.Draw(g);
 					}
+					if (showTriangle)
+						foreach (var triangle in tetTriangles)
+						{
+							triangle.Draw(g);
+						}
 				}
 				if (showLightPosition)
 				{
@@ -230,6 +276,13 @@ namespace Bezier_Surface
 				}
 
 			}
+
+
+			tetTriangles.Add(new Triangle(tetrahedron[0], tetrahedron[1], tetrahedron[2]));
+			tetTriangles.Add(new Triangle(tetrahedron[0], tetrahedron[1], tetrahedron[3]));
+			tetTriangles.Add(new Triangle(tetrahedron[0], tetrahedron[3], tetrahedron[2]));
+			tetTriangles.Add(new Triangle(tetrahedron[3], tetrahedron[1], tetrahedron[2]));
+
 		}
 		public void Rotate()
 		{
@@ -243,11 +296,23 @@ namespace Bezier_Surface
 			{
 				triangle.Rotate(MX, MZ);
 			}
-
 			foreach (var cp in CPs)
 			{
 				cp.reseted = false;
 				cp.Rotate(MX, MZ);
+			}
+			if (animator != null && animator.running)
+			{
+				MZ = Matrix4x4.CreateRotationZ(((alfa + animator.angle) * MathF.PI) / 180f);
+				MX = Matrix4x4.CreateRotationX(((beta + animator.angle) * MathF.PI) / 180f);
+			}
+			foreach (Triangle triangle in tetTriangles)
+			{
+				triangle.ResetRotationChecker();
+			}
+			foreach (Triangle triangle in tetTriangles)
+			{
+				triangle.Rotate(MX, MZ);
 			}
 
 		}
