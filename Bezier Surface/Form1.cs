@@ -3,7 +3,7 @@ namespace Bezier_Surface
 	internal partial class Form1 : Form
 	{
 		Blueprint blueprint;
-		Animator animator; // TODO generacja mapy wektorów normalnych, kilka Ÿróde³ œwiat³a
+		Animator animator;
 		public Form1()
 		{
 			InitializeComponent();
@@ -55,10 +55,13 @@ namespace Bezier_Surface
 		}
 
 		private void Form1_Resize(object sender, EventArgs e)
-		{
-			blueprint.bitmap = new Bitmap(Canvas.Width, Canvas.Height);
-			Canvas.Image = blueprint.bitmap;
-			blueprint.DrawAndRefresh();
+		{ 
+			if (blueprint != null)
+			{
+				blueprint.bitmap = new Bitmap(Canvas.Width, Canvas.Height);
+				Canvas.Image = blueprint.bitmap;
+				blueprint.DrawAndRefresh();
+			}
 		}
 
 		private void lightColorButton_Click(object sender, EventArgs e)
