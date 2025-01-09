@@ -55,7 +55,7 @@ namespace Bezier_Surface
 				blueprint.lightPosition.X = radius * (float)MathF.Cos(angle);
 				blueprint.lightPosition.Y = radius * (float)MathF.Sin(angle);
 				angle += 0.0036f * (speed - speed / 300f * speedDelay);
-				AnimateControlPoints((offset++) / 10f);
+				AnimateSurfaces((offset++) / 10f);
 				blueprint.AnimatorDraw();
 				form.BeginInvoke(blueprint.Refresh);
 				Thread.Sleep(25);
@@ -80,7 +80,7 @@ namespace Bezier_Surface
 			}
 		}
 
-		private void AnimateControlPoints(float offset)
+		private void AnimateSurfaces(float offset)
 		{
 			for (int i = 0; i < 4; i++)
 			{
@@ -90,8 +90,8 @@ namespace Bezier_Surface
 					blueprint.CPs[i * 4 + j].pointBR = new Vector3(p.X, p.Y, p.Z + 10 * (float)Math.Sin(360 / ((j + i) + 1) + offset));
 				}
 			}
-			angle++;
-			if (angle > 360)
+
+			if (angle++ > 360)
 			{
 				angle = 0;
 			}

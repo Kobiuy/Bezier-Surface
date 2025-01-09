@@ -118,7 +118,7 @@ namespace Bezier_Surface
 					{
 						X = i + wOffset;
 						Y = -y + hOffset;
-						(Color color, Single z) = CalculateFinalColor(blueprint, new Vector2(i, y));
+						(Color color, Single z) = CalculateColorAndZ(blueprint, new Vector2(i, y));
 						if (X >= 0 && Y >= 0 && X < fbtmp.Width && Y < fbtmp.Height)
 						{
 							lock (blueprint.zBuffer)
@@ -127,7 +127,6 @@ namespace Bezier_Surface
 									blueprint.zBuffer[X, Y] = z;
 									fbtmp.SetPixel(X, Y, color);
 								}
-
 						}
 					}
 					if ((int)edge.yMax != (int)edge.next.yMin && (int)edge.yMin != (int)edge.next.yMax)
@@ -151,17 +150,19 @@ namespace Bezier_Surface
 
 			return first;
 		}
-		public (Color, Single) CalculateFinalColor(Blueprint bp, Vector2 point)
+		public (Color, Single) CalculateColorAndZ(Blueprint bp, Vector2 point)
 		{
-			(var normal, var z, var color) = InterpolateNormalAndZ(vertices[0], vertices[1], vertices[2], point, bp);
-			if (!bp.useTexture)
-			{
-				color = bp.survaceColor;
-			}
+			(var normal, var z, var color) = InterpolateNormalZAndColor(vertices[0], vertices[1], vertices[2], point, bp);
+
 			if (inTet)
 			{
 				color = myColor;
 			}
+			else if (!bp.useTexture)
+			{
+				color = bp.survaceColor;
+			}
+
 			var io = new Vector3(bp.lightColor.R, bp.lightColor.G, bp.lightColor.B) / 255f;
 			var il = new Vector3(color.R, color.G, color.B) / 255f;
 
@@ -183,7 +184,7 @@ namespace Bezier_Surface
 			return (Color.FromArgb(255, r, g, b), z);
 		}
 
-		public (Vector3, float, Color) InterpolateNormalAndZ(Vertex v1, Vertex v2, Vertex v3, Vector2 P, Blueprint bp)
+		public (Vector3, float, Color) InterpolateNormalZAndColor(Vertex v1, Vertex v2, Vertex v3, Vector2 P, Blueprint bp)
 		{
 			var v1N = v1.normalAR;
 			var v2N = v2.normalAR;
@@ -210,6 +211,7 @@ namespace Bezier_Surface
 			}
 			interpolatedNormal = Vector3.Normalize(interpolatedNormal);
 			float interpolatedZ = a * v1.pointAR.Z + b * v2.pointAR.Z + c * v3.pointAR.Z;
+
 			Color color = bp.survaceColor;
 			if (!inTet && (bp.useNormalMap || bp.useTexture))
 			{

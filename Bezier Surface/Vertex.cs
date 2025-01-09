@@ -34,34 +34,13 @@ namespace Bezier_Surface
 
 		public Vertex(float x, float y, float z)
 		{
-
-			//float u, v;
-
-			//B3[j, i] = MathHelper.CalcB(j, 3, u);
-
-
-			//Vector3 vector = new Vector3();
-			//Vector3 pu = new Vector3();
-			//Vector3 pv = new Vector3();
-
-
-			//vector += CPs[4 * i + j].pointBR * B3[i, r] * B3[j, c];
-			//if (j != 3)
-			//{
-			//	pu += 3 * (CPs[(j + 1) * 4 + i].pointBR - CPs[j * 4 + i].pointBR) * MathHelper.CalcB(j, 2, u) * B3[i, c];
-			//	pv += 3 * (CPs[i * 4 + j + 1].pointBR - CPs[i * 4 + j].pointBR) * B3[i, r] * MathHelper.CalcB(j, 2, v);
-			//}
-			//puBR = pu;
-			//pvBR= pv;
-			//puBR = new Vector3(0, 0, 1);
-			//pvBR = new Vector3(0, 0, 1);
 			this.pointBR = new Vector3(x, y, z);
 			normalBR = Vector3.Cross(puBR, pvBR);
 			this.u = 0;
 			this.v = 0;
 		}
 
-		public void calcNormal(Vertex v1, Vertex v2, Vertex v3)
+		public void CalculateNormalFromNeighbours(Vertex v1, Vertex v2, Vertex v3)
 		{
 			var a = v2.pointBR - v1.pointBR;
 			var b = v2.pointBR - v3.pointBR;

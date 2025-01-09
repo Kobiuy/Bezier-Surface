@@ -6,7 +6,7 @@ namespace Bezier_Surface
 {
 	internal class Blueprint
 	{
-		public string controlPointsFilePath = "ControlPoints/punkty2.txt";
+		public string controlPointsFilePath = "ControlPoints\\punkty2.txt";
 		public string normalMapFilePatch = "NormalMaps\\bricks.JPG";
 		public string textureFilePatch = "Textures\\bricks.JPG";
 		public List<Vertex> tetrahedron = new List<Vertex>();
@@ -29,18 +29,17 @@ namespace Bezier_Surface
 		public float ks { get; set; } = 0.2f;
 		public float kd { get; set; } = 0.8f;
 		public bool useReflector { get; set; }
-		public int mL = 5;
+		public int mL { get; set; } = 5;
 		public bool useTexture { get; set; }
-		public bool showFilling { get; internal set; } = true;
+		public bool showFilling { get; set; } = true;
 		public Single[,] zBuffer { get; set; }
-
 		public Vertex[] CPs = new Vertex[16];
 		public List<Triangle> triangularMesh = new List<Triangle>();
 		public int alfa = 0; // z
 		public int beta = 0; // x
 		public int precision = 10;
 		public Color survaceColor = Color.DeepPink;
-		internal Animator animator;
+		public Animator animator;
 
 		public Blueprint(int width, int height, PictureBox Canvas)
 		{
@@ -54,15 +53,15 @@ namespace Bezier_Surface
 			}
 			bitmap = new Bitmap(width, height);
 			this.canvas = Canvas;
-			tetrahedron.Add(new Vertex(-200, -200, -100));
-			tetrahedron.Add(new Vertex(0, 200, -100));
-			tetrahedron.Add(new Vertex(200, -200, -100));
+			tetrahedron.Add(new Vertex(-100, -100, -100));
+			tetrahedron.Add(new Vertex(0, 100, -100));
+			tetrahedron.Add(new Vertex(100, -100, -100));
 			tetrahedron.Add(new Vertex(0, 0, 300));
 
-			tetrahedron[0].calcNormal(tetrahedron[1], tetrahedron[2], tetrahedron[3]);
-			tetrahedron[1].calcNormal(tetrahedron[0], tetrahedron[2], tetrahedron[3]);
-			tetrahedron[2].calcNormal(tetrahedron[1], tetrahedron[0], tetrahedron[3]);
-			tetrahedron[3].calcNormal(tetrahedron[1], tetrahedron[0], tetrahedron[2]);
+			tetrahedron[0].CalculateNormalFromNeighbours(tetrahedron[1], tetrahedron[2], tetrahedron[3]);
+			tetrahedron[1].CalculateNormalFromNeighbours(tetrahedron[0], tetrahedron[2], tetrahedron[3]);
+			tetrahedron[2].CalculateNormalFromNeighbours(tetrahedron[1], tetrahedron[0], tetrahedron[3]);
+			tetrahedron[3].CalculateNormalFromNeighbours(tetrahedron[1], tetrahedron[0], tetrahedron[2]);
 
 			LoadPoints();
 			CreateTriangularMesh();
